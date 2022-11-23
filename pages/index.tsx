@@ -11,6 +11,7 @@ import {
 } from "react-icons/si";
 import { UiFileInputButton } from "../components/UiFileInputButton";
 import useDownloader from "react-use-downloader";
+import Image from "next/image";
 
 const Loading = () => (
   <>
@@ -83,6 +84,7 @@ export default function Home() {
         {data &&
           data.images.map((imgPath: string, i: number) => {
             const extension = imgPath.split(".")[1];
+            const newPath = imgPath.replaceAll("\\", "/");
             if (extension === "pdf") {
               return (
                 <div
@@ -92,14 +94,14 @@ export default function Home() {
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
-                      download(imgPath, imgPath.replace("/img/", ""))
+                      download(newPath, newPath.replace("/img/", ""))
                     }
                   >
                     <HiDownload />
                   </button>
                   <VscFilePdf className="text-gray-500 object-cover w-[70%] rounded-sm text-6xl" />
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-                    {imgPath.replace("/img/", "")}
+                    {newPath.replace("/img/", "")}
                   </p>
                 </div>
               );
@@ -113,14 +115,14 @@ export default function Home() {
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
-                      download(imgPath, imgPath.replace("/img/", ""))
+                      download(newPath, newPath.replace("/img/", ""))
                     }
                   >
                     <HiDownload />
                   </button>
                   <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-6xl text-blue-700" />
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-                    {imgPath.replace("/img/", "")}
+                    {newPath.replace("/img/", "")}
                   </p>
                 </div>
               );
@@ -134,14 +136,14 @@ export default function Home() {
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
-                      download(imgPath, imgPath.replace("/img/", ""))
+                      download(newPath, newPath.replace("/img/", ""))
                     }
                   >
                     <HiDownload />
                   </button>
                   <SiMicrosoftpowerpoint className="text-red-600 object-cover w-[70%] rounded-sm text-6xl" />
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-                    {imgPath.replace("/img/", "")}
+                    {newPath.replace("/img/", "")}
                   </p>
                 </div>
               );
@@ -159,14 +161,14 @@ export default function Home() {
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
-                      download(imgPath, imgPath.replace("/img/", ""))
+                      download(newPath, newPath.replace("/img/", ""))
                     }
                   >
                     <HiDownload />
                   </button>
                   <SiMicrosoftexcel className="text-green-700 object-cover w-[70%] rounded-sm text-6xl" />
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-                    {imgPath.replace("/img/", "")}
+                    {newPath.replace("/img/", "")}
                   </p>
                 </div>
               );
@@ -180,7 +182,7 @@ export default function Home() {
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
-                      download(imgPath, imgPath.replace("/img/", ""))
+                      download(newPath, newPath.replace("/img/", ""))
                     }
                   >
                     <HiDownload />
@@ -191,10 +193,10 @@ export default function Home() {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <source src={imgPath} type="video/mp4" />
+                    <source src={newPath} type="video/mp4" />
                   </video>
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-                    {imgPath.replace("/img/", "")}
+                    {newPath.replace("/img/", "")}
                   </p>
                 </div>
               );
@@ -204,18 +206,24 @@ export default function Home() {
                 <button
                   className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                   onClick={() =>
-                    download(imgPath, imgPath.replace("/img/", ""))
+                    download(newPath, newPath.replace("/img/", ""))
                   }
                 >
                   <HiDownload />
                 </button>
-                <img
-                  src={imgPath}
-                  className="object-cover h-full w-full rounded-sm"
-                  alt={imgPath}
+                <Image
+                  // layout="fill"
+                  height={680}
+                  width={680}
+                  objectFit="cover"
+                  src={newPath}
+                  blurDataURL={newPath}
+                  placeholder="blur"
+                  className="w-full rounded-sm"
+                  alt={newPath}
                 />
                 <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-                  {imgPath.replace("/img/", "")}
+                  {newPath.replace("/img/", "")}
                 </p>
               </div>
             );

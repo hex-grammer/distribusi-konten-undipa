@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import useSWR from "swr";
 import { HiDownload } from "react-icons/hi";
-import { GrDocumentPdf } from "react-icons/gr";
+import { VscFilePdf } from "react-icons/vsc";
 import {
   SiMicrosoftexcel,
   SiMicrosoftword,
@@ -81,7 +81,7 @@ export default function Home() {
                   >
                     <HiDownload />
                   </button>
-                  <GrDocumentPdf className="object-cover w-[70%] rounded-sm text-6xl" />
+                  <VscFilePdf className="text-gray-500 object-cover w-[70%] rounded-sm text-6xl" />
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
                     {imgPath.replace("\\img\\", "")}
                   </p>
@@ -99,7 +99,7 @@ export default function Home() {
                   >
                     <HiDownload />
                   </button>
-                  <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-6xl" />
+                  <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-6xl text-blue-700" />
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
                     {imgPath.replace("\\img\\", "")}
                   </p>
@@ -117,7 +117,7 @@ export default function Home() {
                   >
                     <HiDownload />
                   </button>
-                  <SiMicrosoftpowerpoint className="object-cover w-[70%] rounded-sm text-6xl" />
+                  <SiMicrosoftpowerpoint className="text-red-600 object-cover w-[70%] rounded-sm text-6xl" />
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
                     {imgPath.replace("\\img\\", "")}
                   </p>
@@ -139,7 +139,7 @@ export default function Home() {
                   >
                     <HiDownload />
                   </button>
-                  <SiMicrosoftexcel className="object-cover w-[70%] rounded-sm text-6xl" />
+                  <SiMicrosoftexcel className="text-green-700 object-cover w-[70%] rounded-sm text-6xl" />
                   <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
                     {imgPath.replace("\\img\\", "")}
                   </p>

@@ -187,7 +187,7 @@ export default function Home() {
               );
             }
             return (
-              <div className="relative w-full">
+              <div key={i} className="relative w-full">
                 <button
                   className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                   onClick={() =>

@@ -68,11 +68,14 @@ export default function Home() {
       <div className="grid md:grid-cols-5 py-5 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
         {!data && "Loading..."}
         {data &&
-          data.images.map((imgPath: string) => {
+          data.images.map((imgPath: string, i: number) => {
             const extension = imgPath.split(".")[1];
             if (extension === "pdf") {
               return (
-                <div className="relative flex items-center justify-center p-5 bg-gray-200 w-full h-full">
+                <div
+                  key={i}
+                  className="relative flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+                >
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
@@ -90,7 +93,10 @@ export default function Home() {
             }
             if (extension === "docx" || extension === "doc") {
               return (
-                <div className="relative flex items-center justify-center p-5 bg-gray-200 w-full h-full">
+                <div
+                  key={i}
+                  className="relative flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+                >
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
@@ -108,7 +114,10 @@ export default function Home() {
             }
             if (extension === "pptx" || extension === "ppt") {
               return (
-                <div className="relative flex items-center justify-center p-5 bg-gray-200 w-full h-full">
+                <div
+                  key={i}
+                  className="relative flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+                >
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
@@ -130,7 +139,10 @@ export default function Home() {
               extension === "xls"
             ) {
               return (
-                <div className="relative flex items-center justify-center p-5 bg-gray-200 w-full h-full">
+                <div
+                  key={i}
+                  className="relative flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+                >
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>
@@ -148,7 +160,10 @@ export default function Home() {
             }
             if (extension === "mp4") {
               return (
-                <div className="relative flex items-center justify-center bg-gray-200 w-full h-full">
+                <div
+                  key={i}
+                  className="relative flex items-center justify-center bg-gray-200 w-full h-full"
+                >
                   <button
                     className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
                     onClick={() =>

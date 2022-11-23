@@ -12,6 +12,19 @@ import {
 import { UiFileInputButton } from "../components/UiFileInputButton";
 import useDownloader from "react-use-downloader";
 
+const Loading = () => (
+  <>
+    {[...Array(5)].map((e, i) => (
+      <>
+        <div
+          key={i}
+          className="relative animate-pulse flex items-center justify-center p-5 bg-gray-200 w-full h-40 rounded-md"
+        />
+      </>
+    ))}
+  </>
+);
+
 export default function Home() {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
   const { data } = useSWR("/api/readfiles", fetcher);
@@ -66,7 +79,7 @@ export default function Home() {
         <Link href="/login">Login</Link>
       </div>
       <div className="grid md:grid-cols-5 py-5 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
-        {!data && "Loading..."}
+        {!data && <Loading />}
         {data &&
           data.images.map((imgPath: string, i: number) => {
             const extension = imgPath.split(".")[1];

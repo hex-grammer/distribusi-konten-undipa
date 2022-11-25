@@ -19,12 +19,10 @@ import { useState } from "react";
 const Loading = () => (
   <>
     {[...Array(5)].map((e, i) => (
-      <>
-        <div
-          key={i}
-          className="relative animate-pulse flex items-center justify-center p-5 bg-gray-200 w-full h-40 rounded-md"
-        />
-      </>
+      <div
+        key={i}
+        className="relative animate-pulse flex items-center justify-center p-5 bg-gray-200 w-full h-40 rounded-md"
+      />
     ))}
   </>
 );
@@ -56,7 +54,12 @@ export default function Home() {
           <Loading />
         ) : (
           data.images.map((imgPath: string, i: number) => (
-            <ContentBox setModalUrl={setModalUrl} imgPath={imgPath} i={i} />
+            <ContentBox
+              key={i}
+              setModalUrl={setModalUrl}
+              imgPath={imgPath}
+              i={i}
+            />
           ))
         )}
       </div>

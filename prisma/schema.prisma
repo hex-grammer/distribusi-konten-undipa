@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model mahasiswa {
+  nama    String
+  stambuk String @id @unique(map: "stambuk")
+  jurusan String
+}
+
+model admin {
+  id       Int    @id @default(autoincrement())
+  nama     String
+  password String @db.VarChar(255)
+}
+
+model dosen {
+  id   Int    @id @default(autoincrement())
+  nama String
+  nidn String
+}
+
+model konten {
+  id         Int      @id @default(autoincrement())
+  nama_file  String
+  type       String
+  extension  String
+  url        String   @db.VarChar(255)
+  created_at DateTime @default(now()) @db.Date
+}

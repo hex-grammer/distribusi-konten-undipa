@@ -1,5 +1,7 @@
+import { setCookie, getCookie } from "cookies-next";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,18 +21,79 @@ const Login = (props: Props) => {
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { isSubmitting, isValid, isDirty },
+    formState: { isSubmitting, isValid },
   } = useForm<FormData>({
     mode: "onBlur",
   });
+  const router = useRouter();
 
   const [jenisAkun, setJenisAkun] = useState("mahasiswa");
 
+  useEffect(() => {
+    const account = getCookie("account");
+    account !== undefined && router.push(`${account}`);
+  }, []);
+
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    // reset();
-    toast.error("Akun tidak ditemukan!");
-    console.log(data);
+    if (data.masukSebagai === "Mahasiswa") {
+      fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify({
+          masukSebagai: "mahasiswa",
+          nama: data.nama,
+          stambuk: data.stambuk,
+          jurusan: data.jurusan,
+        }),
+      })
+        .then((req) => req.json())
+        .then((data) => {
+          if (data.success) {
+            setCookie("account", "mahasiswa");
+            router.push("/mahasiswa");
+            return null;
+          }
+          return toast.error(data.message);
+        });
+      return null;
+    }
+    if (data.masukSebagai === "Dosen") {
+      fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify({
+          masukSebagai: "dosen",
+          nama: data.nama,
+          nidn: data.nidn,
+        }),
+      })
+        .then((req) => req.json())
+        .then((data) => {
+          if (data.success) {
+            setCookie("account", "dosen");
+            router.push("/dosen");
+            return null;
+          }
+          return toast.error(data.message);
+        });
+      return null;
+    }
+    fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify({
+        masukSebagai: "admin/staff",
+        nama: data.nama,
+        password: data.password,
+      }),
+    })
+      .then((req) => req.json())
+      .then((data) => {
+        console.log(data);
+        if (data.success) {
+          setCookie("account", "admin");
+          router.push("/admin");
+          return null;
+        }
+        return toast.error(data.message);
+      });
   };
 
   return (
@@ -49,7 +112,9 @@ const Login = (props: Props) => {
             {...register("masukSebagai", {
               required: true,
               minLength: 3,
-              onChange: (e) => setJenisAkun(e.target.value.toLowerCase()),
+              onChange: (e) => {
+                setJenisAkun(e.target.value.toLowerCase());
+              },
             })}
             className="w-full px-2 py-1.5 mt-1 bg-gray-400 bg-opacity-30 rounded-sm"
           >
@@ -130,7 +195,6 @@ const Login = (props: Props) => {
         )}
         {jenisAkun === "staff" && (
           <>
-            {/* Stambuk */}
             <div className="my-1 w-full text-left">
               <label htmlFor="password">Password</label>
               <input

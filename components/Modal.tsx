@@ -20,7 +20,7 @@ const Modal = ({ imgPath, setModalUrl }: Props) => {
   return (
     <div
       onClick={handleClose}
-      className="absolute w-full h-full left-0 top-0 flex justify-center items-center bg-gray-900 bg-opacity-80 backdrop-blur-sm z-50"
+      className="absolute w-full h-full left-0 top-0 flex justify-center p-5 items-center bg-gray-900 bg-opacity-80 backdrop-blur-sm z-50"
     >
       <div className="relative flex flex-col items-center bg-gray-100 rounded-md">
         <SelectedContent imgPath={newPath} />

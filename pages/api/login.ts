@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { setCookie } from "cookies-next";
 
 type Data = {
   success: boolean;
@@ -43,20 +42,19 @@ export default async function handler(
             .status(400)
             .json({ message: "Akun tidak ditemukan", success: false });
     }
+
     const dataAdmin = await prisma.admin.findFirst({
       where: {
         nama: request.nama,
       },
     });
+
     if (request.password === dataAdmin?.password) {
-      setCookie("account", "admin");
-      res.status(200).json({ message: "Login Berhasil", success: true });
+      return res.status(200).json({ message: "Login Berhasil", success: true });
     }
-    return request.password === dataAdmin?.password
-      ? res.status(200).json({ message: "Login good", success: true })
-      : res
-          .status(400)
-          .json({ message: "username/password salah", success: false });
+    return res
+      .status(400)
+      .json({ message: "username/password salah", success: false });
   } catch (error) {
     res.status(500).json({ message: "Error from server", success: false });
   }

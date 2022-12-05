@@ -40,11 +40,9 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const dir = path.resolve("./public", dirRelativeToPublicFolder);
 
-  const filenames = fs.readdirSync(dir);
+  //   const filenames = fs.readdirSync(dir);
 
-  const images = kontenArr.map((name) =>
-    path.join("/", dirRelativeToPublicFolder, name)
-  );
+  const images = kontenArr.map((name) => path.join("/", dir, name));
 
   //   console.log("user");
   //   console.log(user);

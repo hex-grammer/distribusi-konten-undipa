@@ -13,6 +13,7 @@ import { mutate } from "swr";
 type Props = {
   admin?: boolean;
   show?: boolean;
+  mutateEndPoint?: string;
   setShow: Function;
 };
 
@@ -27,36 +28,14 @@ const UploadModal = (props: Props) => {
   const [file, setFile] = useState<File | undefined>();
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleCheckBox = (e: ChangeEventHandler | undefined) => {
-    // if (e?.currentTarget !== e?.target) return;
-    // e.preventDefault();
-  };
-
-  const CheckBox = ({ label }: { label: string }) => (
-    <div className="flex items-center my-2">
-      <input
-        // onChange={handleCheckBox}
-        id={label}
-        type="checkbox"
-        value={label}
-        className="w-4 h-4"
-      />
-      <label htmlFor={label} className="ml-2 cursor-pointer">
-        {label}
-      </label>
-    </div>
-  );
+  const [akses, setAkses] = useState("");
 
   async function handleUpload() {
     const data = new FormData();
 
     if (!file) return;
-
-    setSubmitting(true);
-
     data.append("file", file);
+    data.append("akses", akses);
 
     const config: AxiosRequestConfig = {
       onUploadProgress: function (progressEvent) {
@@ -68,22 +47,47 @@ const UploadModal = (props: Props) => {
     };
 
     try {
-      await axios.post("/api/videos", data, config);
+      await axios.post("/api/uploadFiles", data, config);
     } catch (e: any) {
       setError(e.message);
     } finally {
-      // router.reload();
-      mutate("/api/readfiles");
+      mutate(props.mutateEndPoint);
       props.setShow(false);
-      setSubmitting(false);
       setProgress(0);
     }
   }
 
-  const handleChange = (file: File | undefined) => {
+  const handleChangeFile = (file: File | undefined) => {
     setFile(file);
     console.log(file);
   };
+
+  const handleChangeAkses = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedAkses = e.target.value;
+    akses.includes(selectedAkses)
+      ? setAkses((a) => a.replace(selectedAkses, ""))
+      : setAkses(akses + selectedAkses);
+  };
+
+  const CheckBox = ({ label }: { label: string }) => (
+    <div className="flex items-center my-2">
+      <input
+        onChange={handleChangeAkses}
+        id={label}
+        type="checkbox"
+        value={label}
+        className="w-4 h-4 hidden"
+      />
+      <label htmlFor={label} className="flex items-center ml-2 cursor-pointer">
+        {akses.includes(label) ? (
+          "✅"
+        ) : (
+          <div className="mx-0.5 h-4 w-4 bg-gray-400" />
+        )}
+        {label}
+      </label>
+    </div>
+  );
 
   return (
     <div
@@ -100,7 +104,7 @@ const UploadModal = (props: Props) => {
         <h1 className="mb-2 font-semibold">Upload File</h1>
         {/* <div className="max-w-[95%]"> */}
         <FileUploader
-          handleChange={handleChange}
+          handleChange={handleChangeFile}
           name="file"
           label={"Upload atau geser file ke area ini"}
           // types={fileTypes}
@@ -108,6 +112,7 @@ const UploadModal = (props: Props) => {
         {/* </div> */}
         {file && (
           <div className="w-full">
+            {/* akses */}
             <div className="py-2 w-full text-sm">
               <h2 className="font-semibold text-base">
                 File ini dapat diakses oleh:

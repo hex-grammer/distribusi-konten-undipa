@@ -23,7 +23,8 @@ const Loading = () => (
 
 export default function Admin() {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
-  const { data } = useSWR("/api/readfiles", fetcher);
+  const apiEndPoint = "/api/readfiles/dosen";
+  const { data } = useSWR(apiEndPoint, fetcher);
   const [modalUrl, setModalUrl] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
@@ -83,7 +84,11 @@ export default function Admin() {
         </div>
       </div>
       {modalUrl !== "" && (
-        <Modal setModalUrl={setModalUrl} filePath={modalUrl} />
+        <Modal
+          mutateEndPoint={apiEndPoint}
+          setModalUrl={setModalUrl}
+          filePath={modalUrl}
+        />
       )}
       <div className="grid md:grid-cols-5 py-5 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
         {!data ? (
@@ -93,8 +98,8 @@ export default function Admin() {
             <ContentBox
               key={i}
               setModalUrl={setModalUrl}
-              imgPath={imgPath}
-              i={i}
+              path={imgPath}
+              index={i}
             />
           ))
         )}

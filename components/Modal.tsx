@@ -12,10 +12,11 @@ type Props = {
   filePath: string;
   setModalUrl: Function;
   setError?: Function;
+  mutateEndPoint: string;
   admin?: boolean;
 };
 
-const Modal = ({ filePath, setModalUrl, admin }: Props) => {
+const Modal = ({ filePath, setModalUrl, admin, mutateEndPoint }: Props) => {
   const { download } = useDownloader();
   const handleClose = (e: any) => {
     if (e.currentTarget != e.target) return;
@@ -30,8 +31,7 @@ const Modal = ({ filePath, setModalUrl, admin }: Props) => {
     } catch (e: any) {
       console.log(e.message);
     } finally {
-      // router.reload();
-      mutate("/api/readfiles");
+      mutate(mutateEndPoint);
       setModalUrl("");
     }
   };
@@ -43,7 +43,7 @@ const Modal = ({ filePath, setModalUrl, admin }: Props) => {
     >
       <div
         className={`${
-          admin && "md:flex-row md:items-start"
+          admin && "md:flex-row md:items-start md:min-w-[580px]"
         } relative flex flex-col items-center bg-gray-100 rounded-md max-w-[80%]`}
       >
         <SelectedContent imgPath={newPath} />
@@ -69,7 +69,7 @@ const Modal = ({ filePath, setModalUrl, admin }: Props) => {
                 </button>
                 <button
                   className="flex flex-1 items-center rounded-md justify-center text-white p-2 px-4 bg-orange-400"
-                  onClick={() => download(newPath, fileName)}
+                  onClick={() => console.log("edit")}
                 >
                   Edit
                   <FiEdit className="text-lg ml-1" />

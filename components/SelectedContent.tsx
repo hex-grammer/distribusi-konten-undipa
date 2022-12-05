@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { FcFolder } from "react-icons/fc";
 import { HiDownload } from "react-icons/hi";
 import {
   SiMicrosoftexcel,
@@ -30,7 +31,7 @@ const SelectedContent = ({ imgPath, i }: Props) => {
     vid.pause();
   };
 
-  const extention = imgPath.split(".")[1];
+  const extension = imgPath.split(".")[1];
 
   const specialExtention = [
     "pdf",
@@ -45,27 +46,27 @@ const SelectedContent = ({ imgPath, i }: Props) => {
   ];
   const newPath = imgPath.replaceAll("\\", "/");
   // if not an image
-  if (specialExtention.includes(extention)) {
+  if (specialExtention.includes(extension)) {
     return (
       <div
         key={i}
         className="relative flex items-center justify-center p-2 rounded-md min-h-[30vh] bg-gray-200 w-full h-full"
       >
-        {extention === "pdf" && (
+        {extension === "pdf" && (
           <VscFilePdf className="text-gray-500 object-cover w-[70%] rounded-sm text-7xl" />
         )}
-        {(extention === "docx" || extention === "doc") && (
+        {(extension === "docx" || extension === "doc") && (
           <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-7xl text-blue-700" />
         )}
-        {(extention === "pptx" || extention === "ppt") && (
+        {(extension === "pptx" || extension === "ppt") && (
           <SiMicrosoftpowerpoint className="text-red-600 object-cover w-[70%] rounded-sm text-7xl" />
         )}
-        {(extention === "xlsx" ||
-          extention === "csv" ||
-          extention === "xls") && (
+        {(extension === "xlsx" ||
+          extension === "csv" ||
+          extension === "xls") && (
           <SiMicrosoftexcel className="text-green-700 object-cover w-[70%] rounded-sm text-7xl" />
         )}
-        {extention === "mp4" && (
+        {extension === "mp4" && (
           <video
             className="object-contain w-full max-h-[50vh]"
             controls
@@ -75,6 +76,14 @@ const SelectedContent = ({ imgPath, i }: Props) => {
             <source src={newPath} type="video/mp4" />
           </video>
         )}
+      </div>
+    );
+  }
+
+  if (extension === undefined) {
+    return (
+      <div className="relative flex items-center justify-center p-2 rounded-md min-h-[30vh] bg-gray-200 w-full h-full">
+        <FcFolder className="text-gray-500 object-cover w-[70%] rounded-sm text-7xl" />
       </div>
     );
   }

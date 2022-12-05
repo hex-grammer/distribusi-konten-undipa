@@ -58,7 +58,7 @@ export default async function handler(
           .status(400)
           .json({ message: "username/password salah", success: false });
   } catch (error) {
-    res.status(400).json({ message: "Error from server", success: false });
+    res.status(500).json({ message: "Error from server", success: false });
   }
   console.log(request);
 }

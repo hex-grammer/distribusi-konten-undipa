@@ -2,6 +2,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import busboy from "busboy";
 import fs from "fs";
+import { inspect } from "util";
+import { PrismaClient } from "@prisma/client";
+import randomString from "randomstring";
 
 export const config = {
   api: {
@@ -9,17 +12,54 @@ export const config = {
   },
 };
 
-function uploadFile(req: NextApiRequest, res: NextApiResponse) {
+// const getDDMMYY = () => {
+//   const today = new Date();
+//   return today.getTime();
+//   // const yy = today.getFullYear().toString().slice(2, 4);
+//   // let mm = (today.getMonth() + 1).toString();
+//   // mm = mm.length < 2 ? "0" + mm : mm;
+//   // let dd = today.getDate().toString();
+//   // dd = dd.length < 2 ? "0" + dd : dd;
+//   // return dd + mm + yy + "_";
+// };
+
+async function uploadFile(req: NextApiRequest, res: NextApiResponse) {
   const bb = busboy({ headers: req.headers });
+  // let fields:{fieldName:string}[] = []
+  let fileName = "";
 
   bb.on("file", (_, file, info) => {
-    const fileName = info.filename;
+    const rand = randomString.generate(5);
+    fileName = rand + "_" + info.filename;
     const filePath = `./public/files/${fileName}`;
 
     const stream = fs.createWriteStream(filePath);
 
     file.pipe(stream);
   });
+
+  bb.on("field", async (_, fieldValue: string) => {
+    const prisma = new PrismaClient();
+
+    try {
+      await prisma.konten
+        .create({
+          data: {
+            nama_file: fileName,
+            akses: fieldValue,
+          },
+        })
+        .then(() =>
+          res.status(200).json({
+            message: "Data berhasil terupload!",
+          })
+        );
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
+  });
+
+  // console.log(req.body);
 
   bb.on("close", () => {
     res.writeHead(200, { Connection: "close" });

@@ -29,8 +29,6 @@ model dosen {
 model konten {
   id         Int      @id @default(autoincrement())
   nama_file  String
-  type       String
-  extension  String
-  url        String   @db.VarChar(255)
+  akses      String
   created_at DateTime @default(now()) @db.Date
 }

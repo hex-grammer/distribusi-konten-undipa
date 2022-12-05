@@ -15,8 +15,6 @@ type Props = {
 };
 
 const SelectedContent = ({ imgPath, i }: Props) => {
-  const { download } = useDownloader();
-
   // handle mouse enter
   const handleMouseEnter = (e: any) => {
     const vid = e.target;
@@ -46,11 +44,12 @@ const SelectedContent = ({ imgPath, i }: Props) => {
     "mp4",
   ];
   const newPath = imgPath.replaceAll("\\", "/");
+  // if not an image
   if (specialExtention.includes(extention)) {
     return (
       <div
         key={i}
-        className="relative flex items-center justify-center p-5 rounded-md min-h-[30vh] bg-gray-200 w-full h-full"
+        className="relative flex items-center justify-center p-2 rounded-md min-h-[30vh] bg-gray-200 w-full h-full"
       >
         {extention === "pdf" && (
           <VscFilePdf className="text-gray-500 object-cover w-[70%] rounded-sm text-7xl" />
@@ -68,7 +67,7 @@ const SelectedContent = ({ imgPath, i }: Props) => {
         )}
         {extention === "mp4" && (
           <video
-            className="object-cover w-full"
+            className="object-contain w-full max-h-[50vh]"
             controls
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -82,14 +81,14 @@ const SelectedContent = ({ imgPath, i }: Props) => {
 
   return (
     <div key={i} className="relative w-full">
-      <Image
-        height={680}
-        width={680}
-        objectFit="cover"
+      <img
+        // height={680}
+        // width={680}
+        // objectFit="cover"
         src={newPath}
-        blurDataURL={newPath}
+        // blurDataURL={newPath}
         placeholder="blur"
-        className="w-full rounded-md"
+        className="w-full rounded-md max-h-[60vh] object-cover"
         alt={newPath}
       />
     </div>

@@ -6,11 +6,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 type Data = {
   error?: string;
   data?: string;
+  user?: string;
   images?: string[];
 };
 
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const dirRelativeToPublicFolder = "img";
+  // const dirRelativeToPublicFolder = `files/${req.body.user}`;
+  const dirRelativeToPublicFolder = `files`;
+  // const dirRelativeToPublicFolder = `files/umum`;
 
   const dir = path.resolve("./public", dirRelativeToPublicFolder);
 

@@ -131,7 +131,9 @@ const Login = (props: Props) => {
         </div>
         {/* nama lengkap */}
         <div className="my-1 w-full text-left">
-          <label htmlFor="nama">Nama Lengkap</label>
+          <label htmlFor="nama">
+            {jenisAkun === "staff" ? "Username" : "Nama Lengkap"}
+          </label>
           <input
             type="text"
             id="nama"

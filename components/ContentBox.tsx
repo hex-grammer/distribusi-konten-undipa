@@ -49,18 +49,18 @@ const ContentBox = ({ imgPath, i, setModalUrl }: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(newPath, newPath.replace("/img/", ""))}
+          onClick={() => download(newPath, newPath.replace("/files/", ""))}
         >
           <HiDownload />
         </button>
         <VscFilePdf className="text-gray-500 object-cover w-[70%] rounded-sm text-6xl" />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {newPath.replace("/img/", "")}
+          {newPath.replace("/files/", "")}
         </p>
       </div>
     );
   }
-  if (extension === "docx" || extension === "doc") {
+  if (["docx", "doc"].includes(extension)) {
     return (
       <div
         key={i}
@@ -69,18 +69,18 @@ const ContentBox = ({ imgPath, i, setModalUrl }: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(newPath, newPath.replace("/img/", ""))}
+          onClick={() => download(newPath, newPath.replace("/files/", ""))}
         >
           <HiDownload />
         </button>
         <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-6xl text-blue-700" />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {newPath.replace("/img/", "")}
+          {newPath.replace("/files/", "")}
         </p>
       </div>
     );
   }
-  if (extension === "pptx" || extension === "ppt") {
+  if (["pptx", "ppt"].includes(extension)) {
     return (
       <div
         onClick={handleModalActive}
@@ -89,18 +89,18 @@ const ContentBox = ({ imgPath, i, setModalUrl }: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(newPath, newPath.replace("/img/", ""))}
+          onClick={() => download(newPath, newPath.replace("/files/", ""))}
         >
           <HiDownload />
         </button>
         <SiMicrosoftpowerpoint className="text-red-600 object-cover w-[70%] rounded-sm text-6xl" />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {newPath.replace("/img/", "")}
+          {newPath.replace("/files/", "")}
         </p>
       </div>
     );
   }
-  if (extension === "xlsx" || extension === "csv" || extension === "xls") {
+  if (["xlsx", "csv", "xls"].includes(extension)) {
     return (
       <div
         onClick={handleModalActive}
@@ -109,18 +109,18 @@ const ContentBox = ({ imgPath, i, setModalUrl }: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(newPath, newPath.replace("/img/", ""))}
+          onClick={() => download(newPath, newPath.replace("/files/", ""))}
         >
           <HiDownload onClick={handleModalActive} />
         </button>
         <SiMicrosoftexcel className="text-green-700 object-cover w-[70%] rounded-sm text-6xl" />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {newPath.replace("/img/", "")}
+          {newPath.replace("/files/", "")}
         </p>
       </div>
     );
   }
-  if (extension === "mp4") {
+  if (["mp4", "m4v", "MOV"].includes(extension)) {
     return (
       <div
         key={i}
@@ -128,7 +128,7 @@ const ContentBox = ({ imgPath, i, setModalUrl }: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(newPath, newPath.replace("/img/", ""))}
+          onClick={() => download(newPath, newPath.replace("/files/", ""))}
         >
           <HiDownload />
         </button>
@@ -142,33 +142,29 @@ const ContentBox = ({ imgPath, i, setModalUrl }: Props) => {
           <source src={newPath} type="video/mp4" />
         </video>
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {newPath.replace("/img/", "")}
+          {newPath.replace("/files/", "")}
         </p>
       </div>
     );
   }
+  // image || ELSE
   return (
     <div key={i} className="relative w-full">
       <button
         className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-        onClick={() => download(newPath, newPath.replace("/img/", ""))}
+        onClick={() => download(newPath, newPath.replace("/files/", ""))}
       >
         <HiDownload />
       </button>
-      <Image
-        // layout="fill"
-        height={680}
-        width={680}
+      <img
         onClick={handleModalActive}
-        objectFit="cover"
         src={newPath}
-        blurDataURL={newPath}
         placeholder="blur"
-        className="w-full rounded-sm cursor-pointer"
+        className="w-full object-cover min-h-full rounded-sm cursor-pointer"
         alt={newPath}
       />
       <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-        {newPath.replace("/img/", "")}
+        {newPath.replace("/files/", "")}
       </p>
     </div>
   );

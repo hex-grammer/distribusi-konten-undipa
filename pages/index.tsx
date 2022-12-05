@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import useSWR from "swr";
 import { HiDownload } from "react-icons/hi";
-import { VscFilePdf } from "react-icons/vsc";
+import { VscFilePdf, VscSignIn } from "react-icons/vsc";
 import {
   SiMicrosoftexcel,
   SiMicrosoftword,
@@ -63,15 +63,16 @@ export default function Home() {
           <div
             className={`${
               !showDropdown && "hidden"
-            } absolute right-0 z-10 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+            } flex text-gray-700 px-2 items-center justify-between absolute right-0 z-10 mt-2 w-20 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="menu-button"
             tabIndex={-1}
           >
+            <VscSignIn className="text-xl" />
             <Link
               href="/sign-in"
-              className="text-gray-700 block w-full px-4 py-2 text-right text-sm"
+              className="block w-full py-2 text-right text-sm"
             >
               Sign in
             </Link>
@@ -80,7 +81,7 @@ export default function Home() {
         {/* <Link href="/login">Login</Link> */}
       </div>
       {modalUrl !== "" && (
-        <Modal setModalUrl={setModalUrl} imgPath={modalUrl} />
+        <Modal setModalUrl={setModalUrl} filePath={modalUrl} />
       )}
       <div className="grid md:grid-cols-5 py-5 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
         {!data ? (

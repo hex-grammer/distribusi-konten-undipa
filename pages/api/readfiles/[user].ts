@@ -46,12 +46,12 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     path.join("/", dirRelativeToPublicFolder, name)
   );
 
-  console.log("user");
-  console.log(user);
-  console.log("images");
-  console.log(images);
-  console.log("kontenArr");
-  console.log(kontenArr);
+  //   console.log("user");
+  //   console.log(user);
+  //   console.log("images");
+  //   console.log(images);
+  //   console.log("kontenArr");
+  //   console.log(kontenArr);
 
   //   const filteredFiles = images.filter(f=>)
 

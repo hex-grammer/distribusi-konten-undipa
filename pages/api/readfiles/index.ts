@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import getConfig from "next/config";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
@@ -23,4 +22,3 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   res.status(200).json({ images });
 };
-// next.config.js

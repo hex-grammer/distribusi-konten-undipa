@@ -26,7 +26,7 @@ function deleteFile(req: NextApiRequest, res: NextApiResponse) {
 
   const dir = path.resolve("./public", dirRelativeToPublicFolder);
   const fileName = req.body.fileName;
-  const filePath = dir + "\\" + fileName;
+  const filePath = dir + "/" + fileName;
   try {
     // console.log(filePath);
     // fs.unlinkSync(req.body.filePath.replaceAll("\\\\", "\\"));

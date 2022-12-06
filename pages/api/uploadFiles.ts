@@ -12,17 +12,6 @@ export const config = {
   },
 };
 
-// const getDDMMYY = () => {
-//   const today = new Date();
-//   return today.getTime();
-//   // const yy = today.getFullYear().toString().slice(2, 4);
-//   // let mm = (today.getMonth() + 1).toString();
-//   // mm = mm.length < 2 ? "0" + mm : mm;
-//   // let dd = today.getDate().toString();
-//   // dd = dd.length < 2 ? "0" + dd : dd;
-//   // return dd + mm + yy + "_";
-// };
-
 async function uploadFile(req: NextApiRequest, res: NextApiResponse) {
   const bb = busboy({ headers: req.headers });
   // let fields:{fieldName:string}[] = []

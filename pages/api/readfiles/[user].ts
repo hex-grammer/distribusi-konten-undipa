@@ -44,20 +44,5 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const images = kontenArr.map((name) => path.join("/", dir, name));
 
-  //   console.log("user");
-  //   console.log(user);
-  //   console.log("images");
-  //   console.log(images);
-  //   console.log("kontenArr");
-  //   console.log(kontenArr);
-
-  //   const filteredFiles = images.filter(f=>)
-
   res.status(200).json({ images });
 };
-// next.config.js
-// module.exports = {
-//   serverRuntimeConfig: {
-//     PROJECT_ROOT: __dirname,
-//   },
-// };

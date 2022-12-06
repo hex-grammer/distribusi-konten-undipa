@@ -26,8 +26,3 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   res.status(200).json({ images });
 };
 // next.config.js
-// module.exports = {
-//   serverRuntimeConfig: {
-//     PROJECT_ROOT: __dirname,
-//   },
-// };

@@ -46,7 +46,7 @@ const ContentBox = (props: Props) => {
     return (
       <div
         key={props.index}
-        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full h-[160px]"
         onClick={handleModalActive}
       >
         <button
@@ -66,7 +66,7 @@ const ContentBox = (props: Props) => {
     return (
       <div
         key={props.index}
-        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full  h-[160px]"
         onClick={handleModalActive}
       >
         <button
@@ -87,7 +87,7 @@ const ContentBox = (props: Props) => {
       <div
         onClick={handleModalActive}
         key={props.index}
-        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+        className=" h-[160px] relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full"
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
@@ -107,7 +107,7 @@ const ContentBox = (props: Props) => {
       <div
         onClick={handleModalActive}
         key={props.index}
-        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+        className="h-[160px] relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full"
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
@@ -126,7 +126,7 @@ const ContentBox = (props: Props) => {
     return (
       <div
         key={props.index}
-        className="relative flex items-center justify-center bg-gray-200 w-full h-full"
+        className="h-[160px] relative flex items-center justify-center bg-gray-200 w-full"
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
@@ -154,7 +154,7 @@ const ContentBox = (props: Props) => {
       <div
         onClick={handleModalActive}
         key={props.index}
-        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full h-full"
+        className="h-fit relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full"
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
@@ -171,7 +171,7 @@ const ContentBox = (props: Props) => {
   }
   // image || ELSE
   return (
-    <div key={props.index} className="relative w-full">
+    <div key={props.index} className="relative w-full  h-[160px]">
       <button
         className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
         onClick={() => download(filePath, fileName)}
@@ -182,7 +182,7 @@ const ContentBox = (props: Props) => {
         onClick={handleModalActive}
         src={filePath}
         placeholder="blur"
-        className="w-full object-cover min-h-full rounded-sm cursor-pointer"
+        className="object-cover h-full rounded-sm cursor-pointer"
         alt={filePath}
       />
       <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">

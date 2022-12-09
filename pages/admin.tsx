@@ -118,19 +118,21 @@ export default function Admin() {
           filePath={modalUrl}
         />
       )}
-      <div className="grid md:grid-cols-5 py-5 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
-        {!data ? (
-          <Loading />
-        ) : (
-          data.images.map((imgPath: string, i: number) => (
-            <ContentBox
-              key={i}
-              setModalUrl={setModalUrl}
-              path={imgPath}
-              index={i}
-            />
-          ))
-        )}
+      <div className="h-full bg-gray-50 ">
+        <div className="grid place-items-start md:grid-cols-5 p-4 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
+          {!data ? (
+            <Loading />
+          ) : (
+            data.images.map((imgPath: string, i: number) => (
+              <ContentBox
+                key={i}
+                setModalUrl={setModalUrl}
+                path={imgPath}
+                index={i}
+              />
+            ))
+          )}
+        </div>
       </div>
       <ToastContainer position="top-right" />
     </div>

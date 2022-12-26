@@ -9,31 +9,80 @@ import axios from "axios";
 import { mutate } from "swr";
 
 type Props = {
-  filePath: string;
+  path: string;
   setModalUrl: Function;
   setError?: Function;
   mutateEndPoint: string;
   admin?: boolean;
 };
 
-const Modal = ({ filePath, setModalUrl, admin, mutateEndPoint }: Props) => {
+async function downloadFile(filename: string) {
+  // Send an HTTP GET request to the PHP endpoint with the filename in the query string
+  const response = await fetch(
+    `https://project-api.xolusi.com/download.php?filename=${filename}`
+  );
+
+  // Check if the response is successful
+  if (!response.ok) {
+    throw new Error(`Failed to download file: ${response.statusText}`);
+  }
+
+  // Get the file data from the response
+  const fileBlob = await response.blob();
+
+  // Create a blob URL for the file
+  const fileUrl = URL.createObjectURL(fileBlob);
+
+  // Create an anchor element
+  const a = document.createElement("a");
+
+  // Set the href attribute of the anchor element to the blob URL
+  a.href = fileUrl;
+
+  // Set the download attribute of the anchor element to the file name
+  a.download = filename;
+
+  // Trigger the download by simulating a click on the anchor element
+  a.click();
+
+  // Revoke the blob URL to release the memory
+  URL.revokeObjectURL(fileUrl);
+}
+
+const Modal = ({ path, setModalUrl, admin, mutateEndPoint }: Props) => {
   const { download } = useDownloader();
   const handleClose = (e: any) => {
     if (e.currentTarget != e.target) return;
     setModalUrl("");
   };
-  const newPath = filePath.replaceAll("\\", "/");
-  const fileName = newPath.replace("/files/", "");
+  const fileName = path;
+  const filePath = "https://project-api.xolusi.com/public/files/";
+  const newPath = filePath + fileName;
+
+  async function deleteFile(fileName: string, filePath: string) {
+    try {
+      const response = await fetch(
+        "https://project-api.xolusi.com/deleteFile.php",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fileName, filePath }),
+        }
+      );
+      const data = await response.json();
+      // console.log(data);
+      setModalUrl("");
+      mutate("https://project-api.xolusi.com/readfilesAdmin.php");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const handleDelete = async () => {
     if (!confirm(`Yakin ingin menghapus ${fileName}`)) return;
-    try {
-      await axios.delete("/api/deleteFile", { data: { fileName } });
-    } catch (e: any) {
-      console.log(e.message);
-    } finally {
-      mutate(mutateEndPoint);
-      setModalUrl("");
-    }
+    deleteFile(fileName, newPath);
   };
 
   return (
@@ -78,7 +127,8 @@ const Modal = ({ filePath, setModalUrl, admin, mutateEndPoint }: Props) => {
             )}
             <button
               className="flex flex-1 items-center col-span-2 rounded-md justify-center text-white p-2 px-4 bg-blue-600"
-              onClick={() => download(newPath, fileName)}
+              // onClick={() => download(newPath, fileName)}
+              onClick={() => downloadFile(fileName)}
             >
               Download
               <HiDownload className="text-lg ml-1" />

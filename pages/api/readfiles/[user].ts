@@ -1,25 +1,23 @@
 import fs from "fs";
 import path from "path";
-import getConfig from "next/config";
-import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
-  error?: string;
   data?: string;
   user?: string;
   images?: string[];
   message?: string;
 };
 
+// Setelah inisialisasi PrismaClient, dapatkan nama pengguna dari permintaan
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const prisma = new PrismaClient();
   const { user } = req.query;
-  const dirRelativeToPublicFolder = `files`;
-  let konten = [{ nama_file: "", akses: "" }];
 
   try {
-    konten = await prisma.konten.findMany({
+    // Temukan konten yang mengandung nama pengguna di field akses
+    const konten = await prisma.konten.findMany({
       where: {
         akses: {
           contains: `${user}`,
@@ -27,24 +25,23 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       },
       select: {
         nama_file: true,
-        akses: true,
       },
     });
+
+    // Dapatkan nama-nama konten
+    const namaKonten = konten.map((k) => k.nama_file);
+
+    // Dapatkan full path ke direktori
+    const dir = path.resolve("./public", `files`);
+    // Dapatkan full path ke gambar menggunakan nama-nama konten dan full path ke direktori
+    const images = namaKonten.map((nama) => path.join("/", `files`, nama));
+
+    // Kirim balik gambar
+    res.status(200).json({ images });
   } catch (error) {
+    // Kirim balik pesan error jika terjadi masalah
     res.status(400).json({
       message: "Data tidak ditemukan",
     });
   }
-
-  const kontenArr = konten.map((k) => k.nama_file);
-
-  const dir = path.resolve("./public", dirRelativeToPublicFolder);
-
-  //   const filenames = fs.readdirSync(dir);
-
-  const images = kontenArr.map((name) =>
-    path.join("/", dirRelativeToPublicFolder, name)
-  );
-
-  res.status(200).json({ images });
 };

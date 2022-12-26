@@ -97,7 +97,7 @@ export default function Home() {
         <Modal
           mutateEndPoint={apiEndPoint}
           setModalUrl={setModalUrl}
-          filePath={modalUrl}
+          path={modalUrl}
         />
       )}
       {/* konten */}

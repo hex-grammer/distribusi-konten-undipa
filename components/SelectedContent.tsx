@@ -44,7 +44,9 @@ const SelectedContent = ({ imgPath, i }: Props) => {
     "xls",
     "mp4",
   ];
+
   const newPath = imgPath.replaceAll("\\", "/");
+
   // if not an image
   if (specialExtention.includes(extension)) {
     return (
@@ -91,11 +93,7 @@ const SelectedContent = ({ imgPath, i }: Props) => {
   return (
     <div key={i} className="relative w-full">
       <img
-        // height={680}
-        // width={680}
-        // objectFit="cover"
         src={newPath}
-        // blurDataURL={newPath}
         placeholder="blur"
         className="w-full rounded-md max-h-[60vh] object-cover"
         alt={newPath}

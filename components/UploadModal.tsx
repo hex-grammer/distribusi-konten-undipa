@@ -27,33 +27,32 @@ const UploadModal = (props: Props) => {
   // const [file, setFile] = useState({ name: null });
   const [file, setFile] = useState<File | undefined>();
   const [progress, setProgress] = useState(0);
-  const [error, setError] = useState(null);
   const [akses, setAkses] = useState("");
 
-  async function handleUpload() {
-    const data = new FormData();
-
-    if (!file) return;
-    data.append("file", file);
-    data.append("akses", akses);
-
-    const config: AxiosRequestConfig = {
-      onUploadProgress: function (progressEvent) {
-        const percentComplete = Math.round(
-          (progressEvent.loaded * 100) / (progressEvent.total || 100)
-        );
-        setProgress(percentComplete);
-      },
-    };
-
+  async function uploadFile() {
     try {
-      await axios.post("/api/uploadFiles", data, config);
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
-      mutate(props.mutateEndPoint);
+      const formData = new FormData();
+      if (!file) return;
+      formData.append("file", file);
+      formData.append("file", file);
+      formData.append("field", "https://project-api.xolusi.com/public/files/");
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const response = await axios.post(
+        "https://project-api.xolusi.com/uploadFile.php",
+        formData,
+        config
+      );
+      // console.log(response.data);
       props.setShow(false);
-      setProgress(0);
+      mutate("https://project-api.xolusi.com/readfilesAdmin.php");
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -127,7 +126,8 @@ const UploadModal = (props: Props) => {
               </p>
               <button
                 className="flex items-center rounded-md justify-center text-white p-2 px-4 bg-blue-500 ml-2 w-fit"
-                onClick={handleUpload}
+                // onClick={handleUpload}
+                onClick={uploadFile}
                 // onClick={() => download(newPath, newPath.replace("/img/", ""))}
               >
                 Upload

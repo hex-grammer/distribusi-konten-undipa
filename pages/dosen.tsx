@@ -99,7 +99,7 @@ export default function Admin() {
         <Modal
           mutateEndPoint={apiEndPoint}
           setModalUrl={setModalUrl}
-          filePath={modalUrl}
+          path={modalUrl}
         />
       )}
       <div className="h-full bg-gray-50 ">

@@ -8,7 +8,6 @@ import {
   SiMicrosoftword,
 } from "react-icons/si";
 import { VscFilePdf } from "react-icons/vsc";
-import useDownloader from "react-use-downloader";
 
 type Props = {
   imgPath: string;
@@ -31,7 +30,8 @@ const SelectedContent = ({ imgPath, i }: Props) => {
     vid.pause();
   };
 
-  const extension = imgPath.split(".")[1];
+  const splitedByDot = imgPath.split(".");
+  const extension = splitedByDot[splitedByDot.length - 1];
 
   const specialExtention = [
     "pdf",

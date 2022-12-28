@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import PulseLoader from "react-spinners/PulseLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -18,6 +19,7 @@ type FormData = {
 };
 
 const Login = (props: Props) => {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -35,6 +37,7 @@ const Login = (props: Props) => {
   }, []);
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
+    setLoading(true);
     if (data.masukSebagai === "Mahasiswa") {
       fetch("/api/login", {
         method: "POST",
@@ -52,8 +55,10 @@ const Login = (props: Props) => {
             router.push("/mahasiswa");
             return null;
           }
+          setLoading(false);
           return toast.error(data.message);
-        });
+        })
+        .finally(() => setLoading(false));
       return null;
     }
     if (data.masukSebagai === "Dosen") {
@@ -73,7 +78,8 @@ const Login = (props: Props) => {
             return null;
           }
           return toast.error(data.message);
-        });
+        })
+        .finally(() => setLoading(false));
       return null;
     }
     fetch("/api/login", {
@@ -93,7 +99,8 @@ const Login = (props: Props) => {
           return null;
         }
         return toast.error(data.message);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -210,11 +217,11 @@ const Login = (props: Props) => {
         )}
         {/* submit */}
         <input
+          disabled={loading}
           type="submit"
-          value="Login"
-          //   disabled={!isValid}
+          value={loading ? "Loading..." : "Login"}
           className={`${
-            isValid || isSubmitting ? "bg-blue-500 text-white" : "bg-gray-200"
+            isValid && !loading ? "bg-blue-500 text-white" : "bg-gray-200"
           } w-full mt-4 py-1.5 px-6 rounded-sm`}
         />
       </form>

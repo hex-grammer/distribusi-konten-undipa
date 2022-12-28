@@ -1,14 +1,11 @@
-import React, { ChangeEventHandler, useState } from "react";
-import { HiDownload, HiUpload } from "react-icons/hi";
+import React, { useState } from "react";
+import { HiUpload } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
-import { FiEdit } from "react-icons/fi";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import useDownloader from "react-use-downloader";
-import SelectedContent from "./SelectedContent";
 import { FileUploader } from "react-drag-drop-files";
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
+import PulseLoader from "react-spinners/PulseLoader";
 
 type Props = {
   admin?: boolean;
@@ -22,20 +19,18 @@ const UploadModal = (props: Props) => {
     if (e.currentTarget != e.target) return;
     props.setShow((s: any) => !s);
   };
-  const fileTypes = ["JPG", "PNG", "DOCX", "PDF"];
-  const router = useRouter();
-  // const [file, setFile] = useState({ name: null });
   const [file, setFile] = useState<File | undefined>();
   const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [akses, setAkses] = useState("");
 
   async function uploadFile() {
+    setLoading(true);
     try {
       const formData = new FormData();
       if (!file) return;
       formData.append("file", file);
-      formData.append("file", file);
-      formData.append("field", "https://project-api.xolusi.com/public/files/");
+      formData.append("field", akses);
 
       const config = {
         headers: {
@@ -101,17 +96,13 @@ const UploadModal = (props: Props) => {
           <IoMdClose />
         </button>
         <h1 className="mb-2 font-semibold">Upload File</h1>
-        {/* <div className="max-w-[95%]"> */}
         <FileUploader
           handleChange={handleChangeFile}
           name="file"
           label={"Upload atau geser file ke area ini"}
-          // types={fileTypes}
         />
-        {/* </div> */}
         {file && (
           <div className="w-full">
-            {/* akses */}
             <div className="py-2 w-full text-sm">
               <h2 className="font-semibold text-base">
                 File ini dapat diakses oleh:
@@ -125,13 +116,25 @@ const UploadModal = (props: Props) => {
                 {progress > 0 && `${progress}%`} {file.name}
               </p>
               <button
-                className="flex items-center rounded-md justify-center text-white p-2 px-4 bg-blue-500 ml-2 w-fit"
-                // onClick={handleUpload}
-                onClick={uploadFile}
-                // onClick={() => download(newPath, newPath.replace("/img/", ""))}
+                className={`flex items-center rounded-md justify-center text-white p-2 px-4 ml-2 ${
+                  loading ? "bg-gray-300" : "bg-blue-600"
+                }`}
+                disabled={loading}
+                onClick={() => uploadFile().then(() => setLoading(false))}
               >
-                Upload
-                <HiUpload className="text-lg ml-1" />
+                {loading ? (
+                  <PulseLoader
+                    color="#ffffff"
+                    size={8}
+                    cssOverride={{ padding: "4px 0px" }}
+                    speedMultiplier={0.7}
+                  />
+                ) : (
+                  <>
+                    Upload
+                    <HiUpload className="text-lg ml-1" />
+                  </>
+                )}
               </button>
             </div>
           </div>

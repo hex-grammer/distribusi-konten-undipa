@@ -23,8 +23,17 @@ const Loading = () => (
 );
 
 export default function Admin() {
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
-  const apiEndPoint = "/api/readfiles/dosen";
+  const fetcher = (url: string) =>
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: "dosen",
+      }),
+    }).then((res) => res.json());
+  const apiEndPoint = "https://project-api.xolusi.com/readfiles.php";
   const { data } = useSWR(apiEndPoint, fetcher);
   const [modalUrl, setModalUrl] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);

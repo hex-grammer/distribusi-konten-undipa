@@ -34,7 +34,6 @@ export default function Admin() {
   const fetcher: Fetcher<DataImages> = (url: string) =>
     fetch(url).then((res) => res.json());
   const apiEndPoint = "https://project-api.xolusi.com/readfilesAdmin.php";
-  // const apiEndPoint = "/api/readfiles";
   const { data } = useSWR<DataImages>(apiEndPoint, fetcher);
   const [modalUrl, setModalUrl] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);

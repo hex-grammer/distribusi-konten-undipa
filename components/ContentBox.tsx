@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { HiDownload } from "react-icons/hi";
 import {
   SiMicrosoftexcel,
@@ -8,7 +8,7 @@ import {
 } from "react-icons/si";
 import { VscFilePdf } from "react-icons/vsc";
 import { FcFolder } from "react-icons/fc";
-import useDownloader from "react-use-downloader";
+import { PulseLoader } from "react-spinners";
 
 type Props = {
   path: string;
@@ -16,41 +16,8 @@ type Props = {
   index?: number;
 };
 
-async function downloadFile(filename: string) {
-  // Send an HTTP GET request to the PHP endpoint with the filename in the query string
-  const response = await fetch(
-    `https://project-api.xolusi.com/download.php?filename=${filename}`
-  );
-
-  // Check if the response is successful
-  if (!response.ok) {
-    throw new Error(`Failed to download file: ${response.statusText}`);
-  }
-
-  // Get the file data from the response
-  const fileBlob = await response.blob();
-
-  // Create a blob URL for the file
-  const fileUrl = URL.createObjectURL(fileBlob);
-
-  // Create an anchor element
-  const a = document.createElement("a");
-
-  // Set the href attribute of the anchor element to the blob URL
-  a.href = fileUrl;
-
-  // Set the download attribute of the anchor element to the file name
-  a.download = filename;
-
-  // Trigger the download by simulating a click on the anchor element
-  a.click();
-
-  // Revoke the blob URL to release the memory
-  URL.revokeObjectURL(fileUrl);
-}
-
 const ContentBox = (props: Props) => {
-  const { download } = useDownloader();
+  const [loading, setLoading] = useState(false);
 
   // handle mouse enter
   const handleMouseEnter = (e: any) => {
@@ -68,14 +35,48 @@ const ContentBox = (props: Props) => {
   };
 
   const handleModalActive = (e: any) => {
-    // if (e.currentTarget != e.target) return;
+    // if (e.currentTarget.id != e.target) return;
     props.setModalUrl(props.path);
   };
 
-  // const extension = props.path.split(".")[1];
-  // const filePath = props.path.replaceAll("\\", "/");
-  // const fileName = filePath.replace("/files/", "");
-  const extension = props.path.split(".")[1];
+  async function downloadFile(filename: string) {
+    setLoading(true);
+
+    // Send an HTTP GET request to the PHP endpoint with the filename in the query string
+    const response = await fetch(
+      `https://project-api.xolusi.com/download.php?filename=${filename}`
+    );
+
+    // Check if the response is successful
+    if (!response.ok) {
+      throw new Error(`Failed to download file: ${response.statusText}`);
+    } else {
+    }
+
+    // Get the file data from the response
+    const fileBlob = await response.blob();
+
+    // Create a blob URL for the file
+    const fileUrl = URL.createObjectURL(fileBlob);
+
+    // Create an anchor element
+    const a = document.createElement("a");
+
+    // Set the href attribute of the anchor element to the blob URL
+    a.href = fileUrl;
+
+    // Set the download attribute of the anchor element to the file name
+    a.download = filename;
+
+    // Trigger the download by simulating a click on the anchor element
+    a.click();
+
+    // Revoke the blob URL to release the memory
+    URL.revokeObjectURL(fileUrl);
+  }
+
+  const splitedByDot = props.path.split(".");
+  const extension = splitedByDot[splitedByDot.length - 1];
   const fileName = props.path;
   const filePath = "https://project-api.xolusi.com/public/files/";
   if (extension === "pdf") {
@@ -87,9 +88,18 @@ const ContentBox = (props: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(filePath, fileName)}
+          // onClick={() => download(filePath, fileName)}
+          onClick={(e) => {
+            e.stopPropagation();
+            downloadFile(fileName).then(() => setLoading(false));
+          }}
+          id="downloader"
         >
-          <HiDownload />
+          {loading ? (
+            <PulseLoader color="#ffffff" size={3} speedMultiplier={0.5} />
+          ) : (
+            <HiDownload />
+          )}
         </button>
         <VscFilePdf className="text-gray-500 object-cover w-[70%] rounded-sm text-6xl" />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
@@ -107,9 +117,18 @@ const ContentBox = (props: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(filePath, fileName)}
+          // onClick={() => download(filePath, fileName)}
+          onClick={(e) => {
+            e.stopPropagation();
+            downloadFile(fileName).then(() => setLoading(false));
+          }}
+          id="downloader"
         >
-          <HiDownload />
+          {loading ? (
+            <PulseLoader color="#ffffff" size={3} speedMultiplier={0.5} />
+          ) : (
+            <HiDownload />
+          )}
         </button>
         <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-6xl text-blue-700" />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
@@ -127,9 +146,18 @@ const ContentBox = (props: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(filePath, fileName)}
+          // onClick={() => download(filePath, fileName)}
+          onClick={(e) => {
+            e.stopPropagation();
+            downloadFile(fileName).then(() => setLoading(false));
+          }}
+          id="downloader"
         >
-          <HiDownload />
+          {loading ? (
+            <PulseLoader color="#ffffff" size={3} speedMultiplier={0.5} />
+          ) : (
+            <HiDownload />
+          )}
         </button>
         <SiMicrosoftpowerpoint className="text-red-600 object-cover w-[70%] rounded-sm text-6xl" />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
@@ -147,7 +175,12 @@ const ContentBox = (props: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(filePath, fileName)}
+          // onClick={() => download(filePath, fileName)}
+          onClick={(e) => {
+            e.stopPropagation();
+            downloadFile(fileName).then(() => setLoading(false));
+          }}
+          id="downloader"
         >
           <HiDownload onClick={handleModalActive} />
         </button>
@@ -166,9 +199,18 @@ const ContentBox = (props: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(filePath, fileName)}
+          // onClick={() => download(filePath, fileName)}
+          onClick={(e) => {
+            e.stopPropagation();
+            downloadFile(fileName).then(() => setLoading(false));
+          }}
+          id="downloader"
         >
-          <HiDownload />
+          {loading ? (
+            <PulseLoader color="#ffffff" size={3} speedMultiplier={0.5} />
+          ) : (
+            <HiDownload />
+          )}
         </button>
         <video
           className="object-cover w-full cursor-pointer"
@@ -194,7 +236,12 @@ const ContentBox = (props: Props) => {
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          onClick={() => download(filePath, fileName)}
+          // onClick={() => download(filePath, fileName)}
+          onClick={(e) => {
+            e.stopPropagation();
+            downloadFile(fileName).then(() => setLoading(false));
+          }}
+          id="downloader"
         >
           <HiDownload onClick={handleModalActive} />
         </button>
@@ -214,9 +261,17 @@ const ContentBox = (props: Props) => {
       <button
         className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
         // onClick={() => download(filePath, fileName)}
-        onClick={() => downloadFile(fileName)}
+        onClick={(e) => {
+          e.stopPropagation();
+          downloadFile(fileName).then(() => setLoading(false));
+        }}
+        id="downloader"
       >
-        <HiDownload />
+        {loading ? (
+          <PulseLoader color="#ffffff" size={3} speedMultiplier={0.5} />
+        ) : (
+          <HiDownload />
+        )}
       </button>
       <img
         onClick={handleModalActive}

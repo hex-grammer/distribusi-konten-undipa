@@ -1,18 +1,89 @@
+import { setCookie, getCookie } from "cookies-next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import React, { useState, useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { TiArrowBackOutline } from "react-icons/ti";
-import Rating from "../components/Rating";
-import { useState } from "react";
+import SkalaLikert from "../components/SkalaLikert";
+
+type Props = {};
+
+type FormData = {
+  kelayakan?: string;
+  alasan?: string;
+  sudahPernahMenggunakan?: string;
+  sudahPernahMengajukan?: string;
+};
 
 export default function RatingAaplikasi() {
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, isValid },
+  } = useForm({
+    mode: "onBlur",
+  });
   const router = useRouter();
-  const [mudah, setMudah] = useState(0);
-  const [lengkap, setLengkap] = useState(0);
-  const [bantu, setBantu] = useState(0);
-  const handleSubmit = () => {
-    console.log("submit");
+
+  // const userData:object = getCookie("userData")!;
+  const userData = {};
+
+  const pertanyaan = [
+    {
+      namaPertanyaan: "akses",
+      pertanyaan:
+        "Apakah kamu merasa aplikasi ini memenuhi kebutuhanmu dalam mengakses konten digital di Universitas Dipa Makassar?",
+    },
+    {
+      namaPertanyaan: "fitur",
+      pertanyaan:
+        "Apakah kamu merasa aplikasi ini memiliki fitur yang sesuai dengan kebutuhanmu dalam mengakses konten digital di Universitas Dipa Makassar?",
+    },
+    {
+      namaPertanyaan: "mudah",
+      pertanyaan: "Apakah kamu merasa aplikasi ini mudah digunakan?",
+    },
+    {
+      namaPertanyaan: "tampilan",
+      pertanyaan:
+        "Apakah kamu merasa aplikasi ini memiliki tampilan yang menarik?",
+    },
+    {
+      namaPertanyaan: "kekurangan",
+      pertanyaan: "Apakah kamu merasa ada banyak kekurangan pada aplikasi ini?",
+    },
+  ];
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    console.log(data);
+    // setLoading(true);
+    // fetch("/api/kuesioner", {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     ...(userData as object),
+    //     kelayakan: data.kelayakan,
+    //     alasan: data.alasan,
+    //     sudahPernahMenggunakan: data.sudahPernahMenggunakan,
+    //     sudahPernahMengajukan: data.sudahPernahMengajukan,
+    //   }),
+    // })
+    //   .then((req) => req.json())
+    //   .then((data) => {
+    //     if (data.success) {
+    //       setCookie("kelayakan", "terverifikasi");
+    //       router.push("/terima-kasih");
+    //       return null;
+    //     }
+    //     setLoading(false);
+    //     return toast.error(data.message);
+    //   })
+    //   .finally(() => setLoading(false));
   };
+
   return (
     <div className="relative flex flex-col h-screen md:px-[18%] overflow-hidden bg-gray-200 ">
       <Head>
@@ -32,46 +103,42 @@ export default function RatingAaplikasi() {
           </button>
         </div>
       </div>
-      <div className="px-4 py-2 bg-gray-100 h-full">
-        <div className="mb-2">
-          Menurut anda, apakah aplikasi ini mudah Diakses?
-          <Rating
-            leftText="Sangat Mudah"
-            rightText="Sangat Sulit"
-            value={lengkap}
-            setValue={setLengkap}
-          />
+      {/* form 1 */}
+      <form
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 overflow-auto h-screen"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+          Kuesioner Kelayakan Aplikasi
+        </h1>
+        <ol className="list-decimal">
+          {pertanyaan.map((p, index) => (
+            <li className="mb-4" key={index}>
+              <p className="font-medium">{p.pertanyaan}</p>
+              <SkalaLikert
+                register={register}
+                name={`${index + 1}_${p.namaPertanyaan}`}
+                opsi={[
+                  "Sangat tidak setuju",
+                  "Tidak setuju",
+                  "Tidak tahu",
+                  "Setuju",
+                  "Sangat setuju",
+                ]}
+              />
+            </li>
+          ))}
+        </ol>
+        <div className="flex items-center justify-between mt-4">
+          <button
+            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-indigo"
+            type="submit"
+          >
+            Kirim
+          </button>
         </div>
-        <div className="mb-2">
-          Apakah konten yang tersedia di aplikasi ini sudah lengkap?
-          <Rating
-            leftText="Sangat Tidak Lengkap"
-            rightText="Sangat Lengkap"
-            value={bantu}
-            setValue={setBantu}
-          />
-        </div>
-        <div className="mb-2">
-          Apakah anda merasa terbantu dengan adanya aplikasi ini?
-          <Rating
-            leftText="Tidak Terbantuh"
-            rightText="Sangat Terbantuh"
-            value={mudah}
-            setValue={setMudah}
-          />
-        </div>
-        <button
-          disabled={[mudah, lengkap, bantu].includes(0)}
-          className={`${
-            [mudah, lengkap, bantu].includes(0) ? "bg-gray-400" : "bg-blue-500"
-          } flex items-center rounded-md justify-center text-white p-1 px-6 w-fit`}
-          onClick={handleSubmit}
-          // onClick={() => download(newPath, newPath.replace("/img/", ""))}
-        >
-          Kirim
-          {/* <HiUpload className="text-lg ml-1" /> */}
-        </button>
-      </div>
+      </form>
+      <ToastContainer />
     </div>
   );
 }

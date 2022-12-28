@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import PulseLoader from "react-spinners/PulseLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

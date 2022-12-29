@@ -101,13 +101,13 @@ export default function RatingAaplikasi() {
         </h1>
         {submitted ? (
           <p className="text-justify">
-            "Terimakasih banyak{" "}
+            &quot;Terimakasih banyak{" "}
             {getCookie("account") === "dosen" ? "Bpk/Ibu" : "saudara(i)"}{" "}
             <b className="text-blue-700">{getValues().nama}</b>, telah mengisi
             kuesioner ini sebagai bagian dari penelitian tugas akhir kami di
             Universitas Dipa Makassar. Kami sangat menghargai partisipasi anda.
             Semoga aplikasi ini dapat memberikan manfaat yang bermanfaat bagi
-            kita semua."
+            kita semua.&quot;
             <br />
             <p
               onClick={router.back}

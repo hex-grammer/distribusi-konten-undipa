@@ -17,7 +17,7 @@ const SkalaLikert: React.FC<SkalaLikertProps> = ({ name, opsi, register }) => {
             type="radio"
             value={op}
             className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-            {...register(name)}
+            {...register(name, { required: true })}
           />
           <label htmlFor={`${name}-${op}`} className="ml-3">
             {op}

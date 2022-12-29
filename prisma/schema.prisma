@@ -32,3 +32,14 @@ model konten {
   akses      String
   created_at DateTime @default(now()) @db.Date
 }
+
+model responden {
+  id_responden Int    @id @default(autoincrement())
+  jenis_akun   String
+  nama         String
+  akses        String
+  fitur        String
+  mudah        String
+  tampilan     String
+  kekurangan   String
+}

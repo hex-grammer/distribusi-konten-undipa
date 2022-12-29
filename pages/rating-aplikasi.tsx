@@ -20,17 +20,14 @@ type FormData = {
 
 export default function RatingAaplikasi() {
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, isValid },
-  } = useForm({
-    mode: "onBlur",
-  });
-  const router = useRouter();
-
-  // const userData:object = getCookie("userData")!;
-  const userData = {};
+    getValues,
+    formState: { isValid },
+  } = useForm({ mode: "onBlur" });
 
   const pertanyaan = [
     {
@@ -59,29 +56,21 @@ export default function RatingAaplikasi() {
   ];
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
-    // setLoading(true);
-    // fetch("/api/kuesioner", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     ...(userData as object),
-    //     kelayakan: data.kelayakan,
-    //     alasan: data.alasan,
-    //     sudahPernahMenggunakan: data.sudahPernahMenggunakan,
-    //     sudahPernahMengajukan: data.sudahPernahMengajukan,
-    //   }),
-    // })
-    //   .then((req) => req.json())
-    //   .then((data) => {
-    //     if (data.success) {
-    //       setCookie("kelayakan", "terverifikasi");
-    //       router.push("/terima-kasih");
-    //       return null;
-    //     }
-    //     setLoading(false);
-    //     return toast.error(data.message);
-    //   })
-    //   .finally(() => setLoading(false));
+    const jenis_akun = getCookie("account") || "umum";
+    setLoading(true);
+    fetch("/api/rating", {
+      method: "POST",
+      body: JSON.stringify({ data: { ...data, jenis_akun } }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          setSubmitted(true);
+          return;
+        }
+        setLoading(false);
+        return toast.error("Terjadi kesalahan, silahkan coba lagi");
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -103,40 +92,76 @@ export default function RatingAaplikasi() {
           </button>
         </div>
       </div>
-      {/* form 1 */}
       <form
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 overflow-auto h-screen"
+        className="bg-white shadow-md rounded p-6 pb-8 overflow-auto h-screen"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+        <h1 className="text-xl font-bold text-gray-800 mb-4">
           Kuesioner Kelayakan Aplikasi
         </h1>
-        <ol className="list-decimal">
-          {pertanyaan.map((p, index) => (
-            <li className="mb-4" key={index}>
-              <p className="font-medium">{p.pertanyaan}</p>
-              <SkalaLikert
-                register={register}
-                name={`${index + 1}_${p.namaPertanyaan}`}
-                opsi={[
-                  "Sangat tidak setuju",
-                  "Tidak setuju",
-                  "Tidak tahu",
-                  "Setuju",
-                  "Sangat setuju",
-                ]}
+        {submitted ? (
+          <p className="text-justify">
+            "Terimakasih banyak{" "}
+            {getCookie("account") === "dosen" ? "Bpk/Ibu" : "saudara(i)"}{" "}
+            <b className="text-blue-700">{getValues().nama}</b>, telah mengisi
+            kuesioner ini sebagai bagian dari penelitian tugas akhir kami di
+            Universitas Dipa Makassar. Kami sangat menghargai partisipasi anda.
+            Semoga aplikasi ini dapat memberikan manfaat yang bermanfaat bagi
+            kita semua."
+            <br />
+            <p
+              onClick={router.back}
+              className={"underline text-sm mt-2 text-blue-500 cursor-pointer"}
+            >
+              Kembali ke halaman utama
+            </p>
+          </p>
+        ) : (
+          <>
+            <div className="flex flex-col mb-4">
+              <label htmlFor="nama" className="font-medium">
+                Nama Lengkap
+              </label>
+              <input
+                id="nama"
+                type="text"
+                className="form-input sm:w-[30%] bg-gray-200 p-2 py-1 rounded-sm focus:outline-none focus:ring-2 focus:ring-gray-3 mt-1 border-b-2 border-blue-500"
+                {...register("nama", { required: true })}
               />
-            </li>
-          ))}
-        </ol>
-        <div className="flex items-center justify-between mt-4">
-          <button
-            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-indigo"
-            type="submit"
-          >
-            Kirim
-          </button>
-        </div>
+            </div>
+            <ol className="list-decimal pl-4">
+              {pertanyaan.map((p, index) => (
+                <li className="mb-4" key={index}>
+                  <p className="font-medium">{p.pertanyaan}</p>
+                  <SkalaLikert
+                    register={register}
+                    name={`${p.namaPertanyaan}`}
+                    opsi={[
+                      "Sangat tidak setuju",
+                      "Tidak setuju",
+                      "Tidak tahu",
+                      "Setuju",
+                      "Sangat setuju",
+                    ]}
+                  />
+                </li>
+              ))}
+            </ol>
+            <div className="flex items-center justify-between mt-4">
+              <button
+                className={`text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-indigo ${
+                  !isValid || loading
+                    ? "cursor-not-allowed bg-gray-400 opacity-50"
+                    : "bg-indigo-500 hover:bg-indigo-700"
+                }}`}
+                type="submit"
+                disabled={!isValid}
+              >
+                {loading ? "Loading..." : "Kirim"}
+              </button>
+            </div>
+          </>
+        )}
       </form>
       <ToastContainer />
     </div>

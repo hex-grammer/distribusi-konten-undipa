@@ -10,6 +10,8 @@ import { getCookie, deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import { VscSignOut } from "react-icons/vsc";
 import { IoMdClose } from "react-icons/io";
+import { FiMenu } from "react-icons/fi";
+import { AiOutlineMenu } from "react-icons/ai";
 
 const Loading = () => (
   <>
@@ -40,13 +42,8 @@ export default function Admin() {
   const router = useRouter();
 
   useEffect(() => {
-    getCookie("account") !== "mahasiswa" && router.push("/sign-in");
+    getCookie("account") !== "mahasiswa" && router.push("/");
   }, []);
-
-  const onSignOut = () => {
-    deleteCookie("account");
-    router.push("/sign-in");
-  };
 
   return (
     <div className="relative flex flex-col h-screen md:px-[18%] overflow-hidden bg-gray-200 ">
@@ -62,13 +59,19 @@ export default function Admin() {
           <div>
             <button
               type="button"
-              className="p-3 rounded-full bg-gray-300 bg-opacity-5"
+              className={`p-3 rounded-full bg-opacity-5 ${
+                showDropdown && "bg-gray-300 "
+              }`}
               onClick={() => setShowDropdown(!showDropdown)}
               id="menu-button"
               aria-expanded="true"
               aria-haspopup="true"
             >
-              {showDropdown ? <IoMdClose /> : <BsThreeDotsVertical />}
+              {showDropdown ? (
+                <IoMdClose size={18} />
+              ) : (
+                <AiOutlineMenu size={24} />
+              )}
             </button>
           </div>
           <div
@@ -80,18 +83,6 @@ export default function Admin() {
             aria-labelledby="menu-button"
             tabIndex={-1}
           >
-            <button
-              onClick={() => {
-                deleteCookie("account");
-                router.push("/sign-in");
-              }}
-              className="flex justify-between items-center  w-full"
-            >
-              <button className="block w-full py-2 text-right text-sm mr-1">
-                Sign out
-              </button>
-              <VscSignOut className="text-xl" />
-            </button>
             <Link
               href={"/rating-aplikasi"}
               className="flex justify-between items-center w-full"
@@ -101,6 +92,18 @@ export default function Admin() {
               </button>
               <BsStar className="text-xl" />
             </Link>
+            <button
+              onClick={() => {
+                deleteCookie("account");
+                router.push("/");
+              }}
+              className="flex justify-between items-center  w-full"
+            >
+              <button className="block w-full py-2 text-right text-sm mr-1">
+                Keluar
+              </button>
+              <VscSignOut className="text-xl" />
+            </button>
           </div>
         </div>
       </div>

@@ -7,6 +7,8 @@ import {
   SiMicrosoftword,
 } from "react-icons/si";
 import { VscFilePdf } from "react-icons/vsc";
+import { MdOutlineOndemandVideo } from "react-icons/md";
+import { BsFileEarmarkMusic, BsFileEarmarkImage } from "react-icons/bs";
 import { FcFolder } from "react-icons/fc";
 import { PulseLoader } from "react-spinners";
 
@@ -76,15 +78,44 @@ const ContentBox = (props: Props) => {
   }
 
   const splitedByDot = props.path.split(".");
-  const extension = splitedByDot[splitedByDot.length - 1];
   const fileName = props.path;
   const filePath = "https://project-api.xolusi.com/public/files/";
-  if (extension === "pdf") {
+  const extension = splitedByDot[splitedByDot.length - 1];
+  const extensionMapping: { [extension: string]: React.ReactElement } = {
+    pdf: (
+      <VscFilePdf className="text-gray-500 object-cover w-[70%] rounded-sm text-6xl" />
+    ),
+    docx: (
+      <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-6xl text-blue-700" />
+    ),
+    doc: (
+      <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-6xl text-blue-700" />
+    ),
+    pptx: (
+      <SiMicrosoftpowerpoint className="text-red-600 object-cover w-[70%] rounded-sm text-6xl" />
+    ),
+    ppt: (
+      <SiMicrosoftpowerpoint className="text-red-600 object-cover w-[70%] rounded-sm text-6xl" />
+    ),
+    xlsx: (
+      <SiMicrosoftexcel className="text-green-600 object-cover w-[70%] rounded-sm text-6xl" />
+    ),
+    xls: (
+      <SiMicrosoftexcel className="text-green-600 object-cover w-[70%] rounded-sm text-6xl" />
+    ),
+    mp4: (
+      <MdOutlineOndemandVideo className="object-cover w-[70%] rounded-sm text-6xl text-orange-600" />
+    ),
+    mp3: (
+      <BsFileEarmarkMusic className="object-cover w-[70%] rounded-sm text-6xl text-purple-600" />
+    ),
+  };
+
+  if (["jpg", "jpeg", "png", "webp"].includes(extension)) {
     return (
       <div
         key={props.index}
-        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full h-[160px]"
-        onClick={handleModalActive}
+        className="relative w-full  h-[160px] overflow-hidden shadow-md rounded-sm"
       >
         <button
           className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
@@ -101,166 +132,28 @@ const ContentBox = (props: Props) => {
             <HiDownload />
           )}
         </button>
-        <VscFilePdf className="text-gray-500 object-cover w-[70%] rounded-sm text-6xl" />
-        <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {fileName}
-        </p>
-      </div>
-    );
-  }
-  if (["docx", "doc"].includes(extension)) {
-    return (
-      <div
-        key={props.index}
-        className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full  h-[160px]"
-        onClick={handleModalActive}
-      >
-        <button
-          className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          // onClick={() => download(filePath, fileName)}
-          onClick={(e) => {
-            e.stopPropagation();
-            downloadFile(fileName).then(() => setLoading(false));
-          }}
-          id="downloader"
-        >
-          {loading ? (
-            <PulseLoader color="#ffffff" size={3} speedMultiplier={0.5} />
-          ) : (
-            <HiDownload />
-          )}
-        </button>
-        <SiMicrosoftword className="object-cover w-[70%] rounded-sm text-6xl text-blue-700" />
-        <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {fileName}
-        </p>
-      </div>
-    );
-  }
-  if (["pptx", "ppt"].includes(extension)) {
-    return (
-      <div
-        onClick={handleModalActive}
-        key={props.index}
-        className=" h-[160px] relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full"
-      >
-        <button
-          className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          // onClick={() => download(filePath, fileName)}
-          onClick={(e) => {
-            e.stopPropagation();
-            downloadFile(fileName).then(() => setLoading(false));
-          }}
-          id="downloader"
-        >
-          {loading ? (
-            <PulseLoader color="#ffffff" size={3} speedMultiplier={0.5} />
-          ) : (
-            <HiDownload />
-          )}
-        </button>
-        <SiMicrosoftpowerpoint className="text-red-600 object-cover w-[70%] rounded-sm text-6xl" />
-        <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {fileName}
-        </p>
-      </div>
-    );
-  }
-  if (["xlsx", "csv", "xls"].includes(extension)) {
-    return (
-      <div
-        onClick={handleModalActive}
-        key={props.index}
-        className="h-[160px] relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full"
-      >
-        <button
-          className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          // onClick={() => download(filePath, fileName)}
-          onClick={(e) => {
-            e.stopPropagation();
-            downloadFile(fileName).then(() => setLoading(false));
-          }}
-          id="downloader"
-        >
-          <HiDownload onClick={handleModalActive} />
-        </button>
-        <SiMicrosoftexcel className="text-green-700 object-cover w-[70%] rounded-sm text-6xl" />
-        <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {fileName}
-        </p>
-      </div>
-    );
-  }
-  if (["mp4", "m4v", "MOV"].includes(extension)) {
-    return (
-      <div
-        key={props.index}
-        className="h-[160px] relative flex items-center justify-center bg-gray-200 w-full"
-      >
-        <button
-          className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          // onClick={() => download(filePath, fileName)}
-          onClick={(e) => {
-            e.stopPropagation();
-            downloadFile(fileName).then(() => setLoading(false));
-          }}
-          id="downloader"
-        >
-          {loading ? (
-            <PulseLoader color="#ffffff" size={3} speedMultiplier={0.5} />
-          ) : (
-            <HiDownload />
-          )}
-        </button>
-        <video
-          className="object-cover w-full cursor-pointer"
-          controls
+        <img
           onClick={handleModalActive}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <source src={filePath} type="video/mp4" />
-        </video>
+          src={filePath + fileName}
+          placeholder="blur"
+          className="object-cover h-full w-full rounded-sm cursor-pointer"
+          alt={fileName}
+        />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
           {fileName}
         </p>
       </div>
     );
   }
-  if (extension === undefined) {
-    return (
-      <div
-        onClick={handleModalActive}
-        key={props.index}
-        className="h-fit relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full"
-      >
-        <button
-          className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-          // onClick={() => download(filePath, fileName)}
-          onClick={(e) => {
-            e.stopPropagation();
-            downloadFile(fileName).then(() => setLoading(false));
-          }}
-          id="downloader"
-        >
-          <HiDownload onClick={handleModalActive} />
-        </button>
-        <FcFolder className="text-green-700 object-cover w-[70%] rounded-sm text-6xl" />
-        <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {fileName}
-        </p>
-      </div>
-    );
-  }
-  // image || ELSE
+
   return (
     <div
       key={props.index}
-      className="relative w-full  h-[160px] overflow-hidden"
+      className="relative cursor-pointer flex items-center justify-center p-5 bg-gray-200 w-full h-[160px] shadow-md rounded-sm"
+      onClick={handleModalActive}
     >
       <button
         className="absolute flex items-center justify-center top-0 right-0 text-xl w-6 h-6 text-white p-1 bg-blue-700"
-        // onClick={() => download(filePath, fileName)}
         onClick={(e) => {
           e.stopPropagation();
           downloadFile(fileName).then(() => setLoading(false));
@@ -273,13 +166,7 @@ const ContentBox = (props: Props) => {
           <HiDownload />
         )}
       </button>
-      <img
-        onClick={handleModalActive}
-        src={filePath + fileName}
-        placeholder="blur"
-        className="object-cover h-full w-full rounded-sm cursor-pointer"
-        alt={fileName}
-      />
+      {extensionMapping[extension]}
       <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
         {fileName}
       </p>

@@ -45,6 +45,37 @@ export default function Admin() {
     getCookie("account") !== "mahasiswa" && router.push("/");
   }, []);
 
+  const sortedContentByType = data?.images.sort((a: string, b: string) => {
+    // Extract the file extension from the `imgPath` property of each object
+    const extA = a.split(".").pop();
+    const extB = b.split(".").pop();
+
+    // Define a mapping of file extensions to document types
+    const docTypes: { [extension: string]: string } = {
+      png: "1_image",
+      webp: "1_image",
+      jpeg: "1_image",
+      pdf: "2_pdf",
+      docx: "3_document",
+      xlsx: "4_spreadsheet",
+      mp4: "video",
+      mp3: "audio",
+    };
+
+    // Use the mapping to get the document type for each object
+    const typeA = extA ? docTypes[extA] : "unknown";
+    const typeB = extB ? docTypes[extB] : "unknown";
+
+    // Compare the document types and return a value based on the result
+    if (typeA < typeB) {
+      return -1;
+    }
+    if (typeA > typeB) {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <div className="relative flex flex-col h-screen md:px-[18%] overflow-hidden bg-gray-200 ">
       <Head>
@@ -114,12 +145,13 @@ export default function Admin() {
           path={modalUrl}
         />
       )}
-      <div className="h-full bg-gray-50 ">
+      {/* konten */}
+      <div className="h-full bg-gray-50 bg-logo-background bg-no-repeat bg-contain bg-center">
         <div className="grid place-items-start md:grid-cols-5 p-4 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
           {!data ? (
             <Loading />
           ) : (
-            data.images.map((imgPath: string, i: number) => (
+            sortedContentByType?.map((imgPath: string, i: number) => (
               <ContentBox
                 key={i}
                 setModalUrl={setModalUrl}

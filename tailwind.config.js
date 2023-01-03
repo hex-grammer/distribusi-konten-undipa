@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'logo-background': "url('/logo-UNDIPA.PNG')",
+        'logo-background': "url('/logo-UNDIPA.png')",
       },
     }
   },

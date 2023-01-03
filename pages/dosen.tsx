@@ -145,7 +145,8 @@ export default function Admin() {
           path={modalUrl}
         />
       )}
-      <div className="h-full bg-gray-50 bg-logo-background bg-no-repeat bg-contain bg-center">
+      {/* konten */}
+      <div className="h-full bg-gray-50 overflow-y-auto bg-logo-background bg-no-repeat bg-contain bg-center">
         <div className="grid place-items-start md:grid-cols-5 p-4 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
           {!data ? (
             <Loading />

@@ -161,7 +161,7 @@ export default function Admin() {
         />
       )}
       {/* konten */}
-      <div className="h-full bg-gray-50 bg-logo-background bg-no-repeat bg-contain bg-center">
+      <div className="h-full overflow-y-auto bg-gray-50 bg-logo-background bg-no-repeat bg-contain bg-center">
         <div className="grid place-items-start md:grid-cols-5 p-4 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
           {!data ? (
             <Loading />

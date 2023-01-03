@@ -24,6 +24,7 @@ const Login = (props: Props) => {
 
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = useForm<FormData>({
@@ -146,6 +147,7 @@ const Login = (props: Props) => {
           {options.map((option, index) => (
             <div key={option.value}>
               <input
+                className="hidden"
                 type="radio"
                 id={`masukSebagai-${index + 1}`}
                 value={option.value}
@@ -157,6 +159,7 @@ const Login = (props: Props) => {
                   },
                 })}
               />
+              {getValues("masukSebagai") === option.value ? "✅" : "⬜"}
               <label className="ml-2" htmlFor={`masukSebagai-${index + 1}`}>
                 {option.label}
               </label>

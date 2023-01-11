@@ -134,7 +134,7 @@ const Login = (props: Props) => {
   return (
     <div className="flex flex-col items-center justify-start sm:pt-8 bg-gray-200 w-full h-screen">
       <form
-        className="relative px-4 pt-12 pb-6 flex flex-col items-start text-center bg-gray-50 sm:rounded-md shadow-md sm:w-fit w-full"
+        className="relative px-4 pt-12 pb-6 flex flex-col items-start text-center bg-gray-50 sm:rounded-md shadow-md sm:w-fit w-full sm:min-w-[28%]"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h1 className="absolute py-2 px-4 text-left sm:rounded-t-md top-0 left-0 w-full text-lg font-bold mb-3 bg-gray-700 text-gray-200">

@@ -168,18 +168,17 @@ const Login = (props: Props) => {
         </div>
 
         {/* nama lengkap */}
-        <div className="my-1 w-full text-left">
-          <label htmlFor="nama">
-            {/* {jenisAkun === "staff" ? "Username" : "Nama Lengkap"} */}
-            Nama Pengguna
-          </label>
-          <input
-            type="text"
-            id="nama"
-            {...register("nama", { required: true })}
-            className="w-full px-2 py-1.5 mt-1 bg-gray-400 bg-opacity-30 rounded-sm"
-          />
-        </div>
+        {jenisAkun !== "masyarakat umum" && (
+          <div className="my-1 w-full text-left">
+            <label htmlFor="nama">Nama Pengguna</label>
+            <input
+              type="text"
+              id="nama"
+              {...register("nama", { required: true })}
+              className="w-full px-2 py-1.5 mt-1 bg-gray-400 bg-opacity-30 rounded-sm"
+            />
+          </div>
+        )}
         {jenisAkun === "mahasiswa" && (
           <>
             {/* Stambuk */}

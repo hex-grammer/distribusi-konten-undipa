@@ -20,6 +20,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const konten = await prisma.konten.findMany({
       select: {
         nama_file: true,
+        kategori: true,
+        created_at: true,
       },
     });
 

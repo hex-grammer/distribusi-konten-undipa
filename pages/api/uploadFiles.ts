@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import busboy from "busboy";
 import fs from "fs";
-import { inspect } from "util";
 import { PrismaClient } from "@prisma/client";
 import randomString from "randomstring";
 
@@ -29,13 +28,17 @@ async function uploadFile(req: NextApiRequest, res: NextApiResponse) {
 
   bb.on("field", async (_, fieldValue: string) => {
     const prisma = new PrismaClient();
+    const field = JSON.parse(fieldValue)
+    console.log(field);
+    const {akses,kategori} = field.akses
 
     try {
       await prisma.konten
         .create({
           data: {
             nama_file: fileName,
-            akses: fieldValue,
+            akses,
+            kategori
           },
         })
         .then(() =>

@@ -23,6 +23,7 @@ const UploadModal = (props: Props) => {
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [akses, setAkses] = useState("");
+  const [kategori, setKategori] = useState("");
 
   async function uploadFile() {
     setLoading(true);
@@ -30,7 +31,7 @@ const UploadModal = (props: Props) => {
       const formData = new FormData();
       if (!file) return;
       formData.append("file", file);
-      formData.append("field", akses);
+      formData.append("field", JSON.stringify({akses,kategori}));
 
       const config = {
         headers: {
@@ -53,7 +54,6 @@ const UploadModal = (props: Props) => {
 
   const handleChangeFile = (file: File | undefined) => {
     setFile(file);
-    console.log(file);
   };
 
   const handleChangeAkses = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,6 +103,12 @@ const UploadModal = (props: Props) => {
         />
         {file && (
           <div className="w-full">
+            <div className="py-2 w-full text-sm mt-2">
+              <h2 className="font-semibold text-base">
+                Kategori konten:
+              </h2>
+              <input type="text" onChange={(e)=>setKategori(e.target.value)} name="kategori" className="w-full bg-gray-300 p-2 rounded-sm text-gray-800" />
+            </div>
             <div className="py-2 w-full text-sm">
               <h2 className="font-semibold text-base">
                 File ini dapat diakses oleh:
@@ -116,9 +122,8 @@ const UploadModal = (props: Props) => {
                 {progress > 0 && `${progress}%`} {file.name}
               </p>
               <button
-                className={`flex items-center rounded-md justify-center text-white p-2 px-4 ml-2 ${
-                  loading ? "bg-gray-300" : "bg-blue-600"
-                }`}
+                className={`flex items-center rounded-md justify-center text-white p-2 px-4 ml-2 ${loading ? "bg-gray-300" : "bg-blue-600"
+                  }`}
                 disabled={loading}
                 onClick={() => uploadFile().then(() => setLoading(false))}
               >

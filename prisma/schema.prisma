@@ -29,6 +29,7 @@ model dosen {
 model konten {
   id         Int      @id @default(autoincrement())
   nama_file  String
+  kategori   String
   akses      String
   created_at DateTime @default(now()) @db.Date
 }

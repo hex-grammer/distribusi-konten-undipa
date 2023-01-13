@@ -25,6 +25,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       },
       select: {
         nama_file: true,
+        kategori: true,
+        created_at: true,
       },
     });
 

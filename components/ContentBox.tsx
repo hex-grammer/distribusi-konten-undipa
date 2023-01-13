@@ -80,9 +80,9 @@ const ContentBox = (props: Props) => {
 
   const splitedByDot = props.path.split(".");
   const fileName = props.path;
-  const fileDate = new Date(props.date).getTime()
-  const currDate = new Date().getTime()
-  const dateDiff = Math.floor((currDate-fileDate)/(24*3600*1000))
+  const fileDate = new Date(props.date).getTime();
+  const currDate = new Date().getTime();
+  const dateDiff = Math.floor((currDate - fileDate) / (24 * 3600 * 1000));
   const filePath = "https://project-api.xolusi.com/public/files/";
   const extension = splitedByDot[splitedByDot.length - 1];
   const extensionMapping: { [extension: string]: React.ReactElement } = {
@@ -144,7 +144,8 @@ const ContentBox = (props: Props) => {
           alt={fileName}
         />
         <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-          {`(${dateDiff})`+fileName}
+          {/* {`(${dateDiff})`+fileName} */}
+          {fileName}
         </p>
       </div>
     );
@@ -172,7 +173,7 @@ const ContentBox = (props: Props) => {
       </button>
       {extensionMapping[extension.toLowerCase()]}
       <p className="truncate absolute bottom-0 left-0 w-full bg-gray-800 overflow-hidden p-1 text-center bg-opacity-80 text-white">
-        {!dateDiff&&'(Baru) '}
+        {/* {!dateDiff&&'(Baru) '} */}
         {/* {`(${!dateDiff&&'(Baru)'}) ${fileName}`} */}
         {fileName}
       </p>

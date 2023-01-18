@@ -11,6 +11,7 @@ type Props = {
   admin?: boolean;
   show?: boolean;
   mutateEndPoint?: string;
+  categories?: string[];
   setShow: Function;
 };
 
@@ -31,7 +32,7 @@ const UploadModal = (props: Props) => {
       const formData = new FormData();
       if (!file) return;
       formData.append("file", file);
-      formData.append("field", JSON.stringify({akses,kategori}));
+      formData.append("field", JSON.stringify({ akses, kategori }));
 
       const config = {
         headers: {
@@ -104,10 +105,26 @@ const UploadModal = (props: Props) => {
         {file && (
           <div className="w-full">
             <div className="py-2 w-full text-sm mt-2">
-              <h2 className="font-semibold text-base">
-                Kategori konten:
-              </h2>
-              <input type="text" onChange={(e)=>setKategori(e.target.value)} name="kategori" className="w-full bg-gray-300 p-2 rounded-sm text-gray-800" />
+              <h2 className="font-semibold text-base">Kategori konten:</h2>
+              {/* <input
+                type="text"
+                onChange={(e) => setKategori(e.target.value)}
+                name="kategori"
+                className="w-full bg-gray-300 p-2 rounded-sm text-gray-800"
+              /> */}
+              <input
+                onChange={(e) => setKategori(e.target.value)}
+                list="categories"
+                name="kategori"
+                className="w-full bg-gray-300 p-2 rounded-sm text-gray-800"
+              />
+              <datalist id="categories">
+                {props.categories?.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </datalist>
             </div>
             <div className="py-2 w-full text-sm">
               <h2 className="font-semibold text-base">
@@ -122,8 +139,9 @@ const UploadModal = (props: Props) => {
                 {progress > 0 && `${progress}%`} {file.name}
               </p>
               <button
-                className={`flex items-center rounded-md justify-center text-white p-2 px-4 ml-2 ${loading ? "bg-gray-300" : "bg-blue-600"
-                  }`}
+                className={`flex items-center rounded-md justify-center text-white p-2 px-4 ml-2 ${
+                  loading ? "bg-gray-300" : "bg-blue-600"
+                }`}
                 disabled={loading}
                 onClick={() => uploadFile().then(() => setLoading(false))}
               >

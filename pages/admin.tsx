@@ -51,24 +51,19 @@ export default function Admin() {
     fetch(url).then((res) => res.json());
   const apiEndPoint = "https://project-api.xolusi.com/readfilesAdmin.php";
   const { data } = useSWR<DataImages>(apiEndPoint, fetcher);
+  const categories = data?.images
+    .map((d) => d.kategori)
+    .filter(
+      (n, i) => data?.images.map((d) => d.kategori).indexOf(n) === i && n !== ""
+    );
   const [modalUrl, setModalUrl] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadModal, setUploadModal] = useState(false);
   const [sortBy, setSortBy] = useState("kategori");
-  const [categories, setCategories] = useState([""]);
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchData() {
-      const kats = data?.images.map((d) => d.kategori);
-      const uniqueKategori = kats?.filter(
-        (n, i) => kats.indexOf(n) === i && n !== ""
-      );
-      const result = await uniqueKategori;
-      setCategories(result || [""]);
-      console.log(result);
-    }
-    fetchData();
+    getCookie("account") !== "admin" && router.push("/");
   }, []);
 
   const onSignOut = () => {

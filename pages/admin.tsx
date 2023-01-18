@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { getCookie, deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import { VscSignOut } from "react-icons/vsc";
-import { HiUpload } from "react-icons/hi";
+import { HiDownload, HiUpload } from "react-icons/hi";
 import UploadModal from "../components/UploadModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -60,6 +60,7 @@ export default function Admin() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadModal, setUploadModal] = useState(false);
   const [sortBy, setSortBy] = useState("kategori");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -75,6 +76,24 @@ export default function Admin() {
     setUploadModal(true);
     setShowDropdown(false);
   };
+
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/download-excel');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'responden.xlsx';
+      a.click();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
 
   const sortedContent = (): any => {
     const kats = data?.images.map((d) => d.kategori);
@@ -178,6 +197,15 @@ export default function Admin() {
                 Upload
               </button>
               <HiUpload onClick={showUploadModal} className="text-xl" />
+            </div>
+            <div className="flex justify-between items-center w-full">
+              <button
+                onClick={handleDownload}
+                className="block w-full py-2 text-right text-sm mr-1"
+              >
+                Download
+              </button>
+              <HiDownload onClick={showUploadModal} className="text-xl" />
             </div>
             <div className="flex justify-between items-center  w-full">
               <button

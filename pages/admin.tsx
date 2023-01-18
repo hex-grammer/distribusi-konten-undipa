@@ -55,10 +55,20 @@ export default function Admin() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadModal, setUploadModal] = useState(false);
   const [sortBy, setSortBy] = useState("kategori");
+  const [categories, setCategories] = useState([""]);
   const router = useRouter();
 
   useEffect(() => {
-    getCookie("account") !== "admin" && router.push("/");
+    async function fetchData() {
+      const kats = data?.images.map((d) => d.kategori);
+      const uniqueKategori = kats?.filter(
+        (n, i) => kats.indexOf(n) === i && n !== ""
+      );
+      const result = await uniqueKategori;
+      setCategories(result || [""]);
+      console.log(result);
+    }
+    fetchData();
   }, []);
 
   const onSignOut = () => {
@@ -126,7 +136,11 @@ export default function Admin() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {uploadModal && (
-        <UploadModal mutateEndPoint={apiEndPoint} setShow={setUploadModal} />
+        <UploadModal
+          mutateEndPoint={apiEndPoint}
+          setShow={setUploadModal}
+          categories={categories}
+        />
       )}
       <div className="flex items-center bg-gray-700  text-white justify-between px-4 py-2">
         <h1 className="text-xl font-semibold flex gap-1">

@@ -181,9 +181,9 @@ export default function Admin() {
             </button>
           </div>
           <div
-            className={`${
+            className={`flex flex-col text-gray-700 px-2 items-center justify-between absolute right-0 z-10 mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
               !showDropdown && "hidden"
-            } flex flex-col text-gray-700 px-2 items-center justify-between absolute right-0 z-10 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+            } `}
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="menu-button"
@@ -201,9 +201,9 @@ export default function Admin() {
             <div className="flex justify-between items-center w-full">
               <button
                 onClick={handleDownload}
-                className="block w-full py-2 text-right text-sm mr-1"
+                className="whitespace-nowrap w-full py-2 text-right text-sm mr-1"
               >
-                Download
+                Hasil Survei
               </button>
               <HiDownload onClick={showUploadModal} className="text-xl" />
             </div>

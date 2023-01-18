@@ -1,26 +1,23 @@
 import axios from "axios";
 import Head from "next/head";
 import Link from "next/link";
-import useSWR from "swr";
-import { HiDownload } from "react-icons/hi";
-import { VscFilePdf, VscSignIn, VscSignOut } from "react-icons/vsc";
-import {
-  SiMicrosoftexcel,
-  SiMicrosoftword,
-  SiMicrosoftpowerpoint,
-} from "react-icons/si";
-import { UiFileInputButton } from "../components/UiFileInputButton";
-import useDownloader from "react-use-downloader";
-import Image from "next/image";
+import useSWR, { Fetcher } from "swr";
+import { BsStar, BsThreeDotsVertical } from "react-icons/bs";
 import ContentBox from "../components/ContentBox";
 import Modal from "../components/Modal";
-import { useState } from "react";
-import { BsStar, BsThreeDotsVertical } from "react-icons/bs";
-import { IoMdClose } from "react-icons/io";
-import { deleteCookie } from "cookies-next";
+import { useState, useEffect } from "react";
+import { getCookie, deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
+import { VscSignOut } from "react-icons/vsc";
+import { HiUpload } from "react-icons/hi";
+import UploadModal from "../components/UploadModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { IoMdClose } from "react-icons/io";
 import { FiMenu } from "react-icons/fi";
 import { AiOutlineMenu } from "react-icons/ai";
+import Image from "next/image";
+import { Interface } from "readline";
 
 const Loading = () => (
   <>
@@ -33,8 +30,24 @@ const Loading = () => (
   </>
 );
 
-export default function Home() {
-  const fetcher = (url: string) =>
+interface Images {
+  nama_file: string;
+  kategori: string;
+  created_at: string;
+}
+
+type DataImages = {
+  images: Images[];
+};
+
+type Kategori = {
+  nama_file: string;
+  kategori: string;
+  created_at: string;
+};
+
+export default function Admin() {
+  const fetcher: Fetcher<DataImages> = (url: string) =>
     fetch(url, {
       method: "POST",
       headers: {
@@ -44,55 +57,91 @@ export default function Home() {
         user: "umum",
       }),
     }).then((res) => res.json());
-  const router = useRouter();
   const apiEndPoint = "https://project-api.xolusi.com/readfiles.php";
-  const { data } = useSWR(apiEndPoint, fetcher);
+  const { data } = useSWR<DataImages>(apiEndPoint, fetcher);
   const [modalUrl, setModalUrl] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [uploadModal, setUploadModal] = useState(false);
+  const [sortBy, setSortBy] = useState("kategori");
+  const router = useRouter();
 
-  const sortedContentByType = data?.images.sort((a: string, b: string) => {
-    // Extract the file extension from the `imgPath` property of each object
-    const extA = a.split(".").pop();
-    const extB = b.split(".").pop();
+  useEffect(() => {
+    getCookie("account") !== "umum" && router.push("/");
+  }, []);
 
-    // Define a mapping of file extensions to document types
-    const docTypes: { [extension: string]: string } = {
-      png: "1_image",
-      webp: "1_image",
-      jpeg: "1_image",
-      pdf: "2_pdf",
-      docx: "3_document",
-      xlsx: "4_spreadsheet",
-      mp4: "video",
-      mp3: "audio",
-    };
+  const onSignOut = () => {
+    deleteCookie("account");
+    router.push("/");
+  };
 
-    // Use the mapping to get the document type for each object
-    const typeA = extA ? docTypes[extA] : "unknown";
-    const typeB = extB ? docTypes[extB] : "unknown";
+  const showUploadModal = () => {
+    setUploadModal(true);
+    setShowDropdown(false);
+  };
 
-    // Compare the document types and return a value based on the result
-    if (typeA < typeB) {
-      return -1;
-    }
-    if (typeA > typeB) {
-      return 1;
-    }
-    return 0;
-  });
+  const sortedContent = (): any => {
+    const kats = data?.images.map((d) => d.kategori);
+    const dates = data?.images.map((d) => d.created_at);
+    const uniqueKategori = kats?.filter(
+      (n, i) => kats.indexOf(n) === i && n !== ""
+    );
+
+    const uniqueDate = dates
+      ?.filter((n, i) => dates.indexOf(n) === i)
+      .reverse();
+
+    const filterByKat = [...(uniqueKategori || []), ""].map((kat) =>
+      data?.images.filter((k) => k.kategori === kat)
+    );
+    const filterByDate = uniqueDate?.map((date) =>
+      data?.images.filter((d) => d.created_at === date)
+    );
+    const retVal = sortBy === "kategori" ? filterByKat : filterByDate;
+    return retVal;
+  };
+
+  // date to text
+  const dateToText = (date: string) => {
+    const dateArr = date.split("-");
+    const month = dateArr[1];
+    const day = dateArr[2].split(" ")[0];
+    const year = dateArr[0];
+    const monthText = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+    return `${day} ${monthText[parseInt(month) - 1]} ${year}`;
+  };
 
   return (
-    <div className="relative flex flex-col h-screen md:px-[18%] overflow-hidden bg-gray-200 ">
+    <div className="relative flex flex-col h-screen md:px-[18%] overflow-hidden bg-gray-900">
       <Head>
         <title>Distribusi Konten Digital UNDIPA</title>
-        <meta name="description" content="Generated by create next app" />
+        <meta
+          name="description"
+          content="Aplikasi Distribusi Konten Digital Universitas Dipa Makassar"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      {uploadModal && (
+        <UploadModal mutateEndPoint={apiEndPoint} setShow={setUploadModal} />
+      )}
       <div className="flex items-center bg-gray-700  text-white justify-between px-4 py-2">
-        <h1 className="text-xl font-semibold">
+        <h1 className="text-xl font-semibold flex gap-1">
           Distribusi Konten Digital <br />
           Universitas Dipa Makassar
         </h1>
+        {/* action menu */}
         {/* action menu */}
         <div className="relative inline-block text-left">
           <div>
@@ -146,31 +195,60 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* modal */}
       {modalUrl !== "" && (
         <Modal
           mutateEndPoint={apiEndPoint}
+          admin={true}
           setModalUrl={setModalUrl}
           path={modalUrl}
         />
       )}
       {/* konten */}
-      <div className="h-full bg-gray-50 overflow-y-auto bg-logo-background bg-no-repeat bg-contain bg-center">
+      <div className="h-full overflow-y-auto pb-4 bg-gray-400 bg-logo-background bg-no-repeat bg-contain bg-center">
         <div className="grid place-items-start md:grid-cols-5 p-4 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
+          <h2 className="text-lg col-span-full mt-2 text-gray-800 flex bg-gray-200 px-2 py-1 rounded-sm shadow-md">
+            <label htmlFor="sort">Sort by</label>
+            <select
+              id="sort"
+              className="font-normal text-base bg-transparent text-blue-700 ml-1"
+              onChange={(e) => setSortBy(e.target.value.toLowerCase())}
+            >
+              <option>kategori</option>
+              <option>tanggal</option>
+            </select>
+          </h2>
           {!data ? (
             <Loading />
           ) : (
-            sortedContentByType?.map((imgPath: string, i: number) => (
-              <ContentBox
-                key={i}
-                setModalUrl={setModalUrl}
-                path={imgPath}
-                index={i}
-              />
-            ))
+            sortedContent()?.map((kategori: Kategori[]) => {
+              const contents = kategori.map((k) => {
+                return { name: k.nama_file, date: k.created_at };
+              });
+              return (
+                <>
+                  <h2 className="text-lg font-medium col-span-full mt-2 text-gray-700 bg-gray-200 shadow-md px-2 bg-opacity-80 rounded-sm">
+                    {sortBy === "kategori"
+                      ? kategori[0].kategori || "Tanpa Kategori"
+                      : dateToText(kategori[0].created_at)}
+                  </h2>
+                  {contents.map(
+                    (img: { name: string; date: string }, i: number) => (
+                      <ContentBox
+                        key={i}
+                        setModalUrl={setModalUrl}
+                        path={img.name}
+                        date={img.date}
+                        index={i}
+                      />
+                    )
+                  )}
+                </>
+              );
+            })
           )}
         </div>
       </div>
+      <ToastContainer position="top-right" />
     </div>
   );
 }

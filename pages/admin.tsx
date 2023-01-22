@@ -56,20 +56,8 @@ export default function Admin() {
   const [uploadModal, setUploadModal] = useState(false);
   const [sortBy, setSortBy] = useState("kategori");
   const [categories, setCategories] = useState([""]);
+  const [selectedCat, setSelectedCat] = useState('semua');
   const router = useRouter();
-
-  useEffect(() => {
-    async function fetchData() {
-      const kats = data?.images.map((d) => d.kategori);
-      const uniqueKategori = kats?.filter(
-        (n, i) => kats.indexOf(n) === i && n !== ""
-      );
-      const result = await uniqueKategori;
-      setCategories(result || [""]);
-      console.log(result);
-    }
-    fetchData();
-  }, []);
 
   const onSignOut = () => {
     deleteCookie("account");
@@ -151,9 +139,8 @@ export default function Admin() {
           <div>
             <button
               type="button"
-              className={`p-3 rounded-full bg-opacity-5 ${
-                showDropdown && "bg-gray-300 "
-              }`}
+              className={`p-3 rounded-full bg-opacity-5 ${showDropdown && "bg-gray-300 "
+                }`}
               onClick={() => setShowDropdown(!showDropdown)}
               id="menu-button"
               aria-expanded="true"
@@ -167,9 +154,8 @@ export default function Admin() {
             </button>
           </div>
           <div
-            className={`${
-              !showDropdown && "hidden"
-            } flex flex-col text-gray-700 px-2 items-center justify-between absolute right-0 z-10 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+            className={`${!showDropdown && "hidden"
+              } flex flex-col text-gray-700 px-2 items-center justify-between absolute right-0 z-10 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="menu-button"
@@ -205,19 +191,30 @@ export default function Admin() {
         />
       )}
       {/* konten */}
-      <div className="h-full overflow-y-auto pb-4 bg-gray-400 bg-logo-background bg-no-repeat bg-contain bg-center">
+      <div className="h-full overflow-y-auto pb-4 bg-gray-400 bg-logo-background bg-no-repeat bg-cover bg-center">
         <div className="grid place-items-start md:grid-cols-5 p-4 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
-          <h2 className="text-lg col-span-full mt-2 text-gray-800 flex bg-gray-200 px-2 py-1 rounded-sm shadow-md">
-            <label htmlFor="sort">Sort by</label>
-            <select
-              id="sort"
-              className="font-normal text-base bg-transparent text-blue-700 ml-1"
-              onChange={(e) => setSortBy(e.target.value.toLowerCase())}
-            >
-              <option>kategori</option>
-              <option>tanggal</option>
-            </select>
-          </h2>
+          <div className="col-span-full flex gap-2 justify-center">
+            <h2 className="text-lg mt-2 text-gray-800 flex bg-gray-200 px-2 py-1 rounded-sm shadow-md">
+              <label htmlFor="sort">Urut berdasarkan:</label>
+              <select
+                id="sort"
+                className="bg-transparent text-blue-700 ml-1"
+                onChange={(e) => setSortBy(e.target.value.toLowerCase())}
+              >
+                <option>Kategori</option>
+                <option>Tanggal</option>
+              </select>
+            </h2>
+            {
+              ['Semua','test 1', 'test 2'].map(kat => (
+                <h2 className={`flex items-center px-4 text-lg font-medium col-span-full mt-2 text-gray-700 shadow-md bg-opacity-80 rounded-full ${
+                  selectedCat===kat.toLocaleLowerCase() ? 'bg-blue-700 text-white': 'bg-gray-200'
+                }`}>
+                  {kat}
+                </h2>
+              ))
+            }
+          </div>
           {!data ? (
             <Loading />
           ) : (

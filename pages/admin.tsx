@@ -61,11 +61,8 @@ export default function Admin() {
   const [uploadModal, setUploadModal] = useState(false);
   const [sortBy, setSortBy] = useState("kategori");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCat, setSelectedCat] = useState("semua");
   const router = useRouter();
-
-  useEffect(() => {
-    getCookie("account") !== "admin" && router.push("/");
-  }, []);
 
   const onSignOut = () => {
     deleteCookie("account");
@@ -80,20 +77,19 @@ export default function Admin() {
   const handleDownload = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/download-excel');
+      const response = await fetch("/api/download-excel");
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'responden.xlsx';
+      a.download = "responden.xlsx";
       a.click();
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
     }
-  }
-
+  };
 
   const sortedContent = (): any => {
     const kats = data?.images.map((d) => d.kategori);
@@ -136,7 +132,8 @@ export default function Admin() {
       "November",
       "Desember",
     ];
-    return `${day} ${monthText[parseInt(month) - 1]} ${year}`;
+    // return `${day}-${monthText[parseInt(month) - 1].slice(0, 3)}-${year}`;
+    return `${day}/${month}/${year}`;
   };
 
   return (
@@ -228,33 +225,96 @@ export default function Admin() {
         />
       )}
       {/* konten */}
-      <div className="h-full overflow-y-auto pb-4 bg-gray-400 bg-logo-background bg-no-repeat bg-contain bg-center">
+      <div className="h-full overflow-y-auto pb-4 bg-gray-400 bg-logo-background bg-no-repeat bg-cover bg-center">
         <div className="grid place-items-start md:grid-cols-5 p-4 grid-cols-3 w-full gap-2 h-fit overflow-y-auto">
-          <h2 className="text-lg col-span-full mt-2 text-gray-800 flex bg-gray-200 px-2 py-1 rounded-sm shadow-md">
-            <label htmlFor="sort">Sort by</label>
-            <select
-              id="sort"
-              className="font-normal text-base bg-transparent text-blue-700 ml-1"
-              onChange={(e) => setSortBy(e.target.value.toLowerCase())}
+          {/* Urut Berdasarkan */}
+          <div className="col-span-full">
+            <h2 className="text-lg mt-2 text-gray-800 flex bg-gray-200 px-2 py-1 rounded-sm shadow-md">
+              <label htmlFor="sort">Urut berdasarkan:</label>
+              <select
+                id="sort"
+                className="bg-transparent text-blue-700 ml-1"
+                onChange={(e) => {
+                  setSortBy(e.target.value.toLowerCase());
+                  setSelectedCat("semua");
+                }}
+              >
+                <option>Kategori</option>
+                <option>Tanggal</option>
+              </select>
+            </h2>
+          </div>
+          <div className="col-span-full flex flex-wrap gap-2 py-2 w-full">
+            {/* Semua */}
+            <h2
+              onClick={() => setSelectedCat("semua")}
+              className={`flex items-center px-4 text-lg font-medium col-span-full mt-2 shadow-md bg-opacity-80 rounded-full cursor-pointer ${
+                selectedCat === "semua"
+                  ? "bg-blue-700 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
             >
-              <option>kategori</option>
-              <option>tanggal</option>
-            </select>
-          </h2>
+              Semua
+            </h2>
+            {/* chips kategori */}
+            {data &&
+              sortedContent()?.map((kategori: Kategori[], i: number) => {
+                const label =
+                  sortBy === "kategori"
+                    ? kategori[0].kategori
+                    : dateToText(kategori[0].created_at);
+                return (
+                  <h2
+                    key={i}
+                    onClick={() => setSelectedCat(label.toLocaleLowerCase())}
+                    className={`flex items-center px-4 text-lg font-medium col-span-full mt-2 shadow-md bg-opacity-80 rounded-full cursor-pointer whitespace-nowrap ${
+                      selectedCat === label.toLocaleLowerCase() || ""
+                        ? "bg-blue-700 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    {label || "Tanpa Kategori"}
+                  </h2>
+                );
+              })}
+          </div>
           {!data ? (
             <Loading />
           ) : (
             sortedContent()?.map((kategori: Kategori[]) => {
-              const contents = kategori.map((k) => {
-                return { name: k.nama_file, date: k.created_at };
-              });
+              const contents = kategori
+                .filter(
+                  (k) =>
+                    selectedCat === k.kategori.toLowerCase() ||
+                    selectedCat === dateToText(k.created_at).toLowerCase() ||
+                    selectedCat === "semua"
+                )
+                .map((k) => {
+                  return {
+                    name: k.nama_file,
+                    date: k.created_at,
+                    kategori: k.kategori,
+                  };
+                });
+              console.log(contents);
               return (
                 <>
-                  <h2 className="text-lg font-medium col-span-full mt-2 text-gray-700 bg-gray-200 shadow-md px-2 bg-opacity-80 rounded-sm">
-                    {sortBy === "kategori"
-                      ? kategori[0].kategori || "Tanpa Kategori"
-                      : dateToText(kategori[0].created_at)}
-                  </h2>
+                  {/* LABEL KATEGORI & TANGGAL */}
+                  {sortBy === "kategori" &&
+                    selectedCat === "semua" &&
+                    contents[0] && (
+                      <h2 className="text-lg font-medium col-span-full mt-2 text-gray-700 bg-gray-200 shadow-md px-2 bg-opacity-80 rounded-sm">
+                        {contents[0]?.kategori || "Tanpa Kategori"}
+                      </h2>
+                    )}
+                  {sortBy === "tanggal" &&
+                    selectedCat === "semua" &&
+                    contents[0] && (
+                      <h2 className="text-lg font-medium col-span-full mt-2 text-gray-700 bg-gray-200 shadow-md px-2 bg-opacity-80 rounded-sm">
+                        {dateToText(contents[0]?.date) || "Tanpa Kategori"}
+                      </h2>
+                    )}
+
                   {contents.map(
                     (img: { name: string; date: string }, i: number) => (
                       <ContentBox

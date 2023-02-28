@@ -1,3 +1,4 @@
+import axios from "axios";
 import { setCookie, getCookie } from "cookies-next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -43,14 +44,14 @@ const Login = (props: Props) => {
     account !== undefined && router.push(`${account}`);
   }, []);
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = (dataInput) => {
     setLoading(true);
-    if (data.masukSebagai === "Masyarakat Umum") {
+    if (dataInput.masukSebagai === "Masyarakat Umum") {
       fetch("/api/login", {
         method: "POST",
         body: JSON.stringify({
           masukSebagai: "umum",
-          nama: data.nama,
+          nama: dataInput.nama,
         }),
       })
         .then((req) => req.json())
@@ -65,70 +66,82 @@ const Login = (props: Props) => {
         })
         .finally(() => setLoading(false));
       return null;
-    }
-    if (data.masukSebagai === "Mahasiswa") {
-      fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify({
-          masukSebagai: "mahasiswa",
-          nama: data.nama,
-          stambuk: data.stambuk,
-          jurusan: data.jurusan,
-        }),
-      })
-        .then((req) => req.json())
-        .then((data) => {
-          if (data.success) {
+    } else if (dataInput.masukSebagai === "Mahasiswa") {
+      axios
+        .get("/api/mahasiswa")
+        .then((res) => {
+          const { data } = res.data.data;
+          if (
+            data.some(
+              (item: { stb: string; nmmhs: string }) =>
+                item.stb === dataInput.stambuk &&
+                item.nmmhs === dataInput.nama?.toUpperCase()
+            )
+          ) {
             setCookie("account", "mahasiswa");
             router.push("/mahasiswa");
             return null;
+          } else {
+            setLoading(false);
+            return toast.error("Data tidak ditemukan");
           }
-          setLoading(false);
-          return toast.error(data.message);
         })
-        .finally(() => setLoading(false));
-      return null;
-    }
-    if (data.masukSebagai === "Dosen") {
+        .catch(() => {
+          setLoading(false);
+          return toast.error("Terjadi kesalahan");
+        });
+    } else if (dataInput.masukSebagai === "Dosen") {
+      axios
+        .get("/api/dosen")
+        .then((res) => {
+          const { data } = res.data.data;
+          console.log(data);
+          console.log(`data.some(
+            (item: { nidn: string; nmdos: string }) =>
+              item.nidn === ${dataInput.nidn} &&
+              item.nmdos === ${dataInput.nama?.toUpperCase()}
+          )`);
+
+          if (
+            data.some(
+              (item: { nidn: string; nmdos: string }) =>
+                item.nidn === dataInput.nidn &&
+                item.nmdos === dataInput.nama?.toUpperCase()
+            )
+          ) {
+            setCookie("account", "dosen");
+            router.push("/dosen");
+            return null;
+          } else {
+            setLoading(false);
+            return toast.error("Data tidak ditemukan");
+          }
+        })
+        .catch(() => {
+          setLoading(false);
+          return toast.error("Terjadi kesalahan");
+        });
+    } else {
       fetch("/api/login", {
         method: "POST",
         body: JSON.stringify({
-          masukSebagai: "dosen",
-          nama: data.nama,
-          nidn: data.nidn,
+          masukSebagai: "admin/staff",
+          nama: dataInput.nama,
+          password: dataInput.password,
         }),
       })
         .then((req) => req.json())
         .then((data) => {
+          console.log(data);
           if (data.success) {
-            setCookie("account", "dosen");
-            router.push("/dosen");
+            setCookie("account", "admin");
+            router.push("/admin");
             return null;
           }
           return toast.error(data.message);
         })
         .finally(() => setLoading(false));
-      return null;
     }
-    fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify({
-        masukSebagai: "admin/staff",
-        nama: data.nama,
-        password: data.password,
-      }),
-    })
-      .then((req) => req.json())
-      .then((data) => {
-        console.log(data);
-        if (data.success) {
-          setCookie("account", "admin");
-          router.push("/admin");
-          return null;
-        }
-        return toast.error(data.message);
-      })
-      .finally(() => setLoading(false));
   };
 
   return (
@@ -192,7 +205,7 @@ const Login = (props: Props) => {
               />
             </div>
             {/* jurusan */}
-            <div className="my-1 w-full text-left">
+            {/* <div className="my-1 w-full text-left">
               <label htmlFor="jurusan">Jurusan</label>
               <select
                 id="jurusan"
@@ -216,7 +229,7 @@ const Login = (props: Props) => {
                   Rekayasa Perangkat Lunak
                 </option>
               </select>
-            </div>
+            </div> */}
           </>
         )}
         {jenisAkun === "dosen" && (

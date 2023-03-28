@@ -47,6 +47,7 @@ const Login = (props: Props) => {
   const onSubmit: SubmitHandler<FormData> = (dataInput) => {
     setLoading(true);
     if (dataInput.masukSebagai === "Masyarakat Umum") {
+      console.log("umum");
       fetch("/api/login", {
         method: "POST",
         body: JSON.stringify({

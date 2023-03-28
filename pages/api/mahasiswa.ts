@@ -18,7 +18,7 @@ export default async function handler(
   }
   try {
     const response = await fetch(
-      "https://service.undipa.ac.id/allmahasiswa.php?api=071994"
+      "https://testing.undipa.ac.id/allmahasiswa.php?api=071994"
     );
     const data = await response.json();
     res.status(200).json({ data, success: true });
